@@ -5,7 +5,9 @@ Quy trình duyệt code:
 - Khi duyệt ổn thì đẩy lên nhánh master
 
 Visual studio code(FE)
+
 Intellij(BE)
+
 MYSQL(Database)
 
 Công nghệ sử dụng: 
