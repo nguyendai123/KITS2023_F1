@@ -1,6 +1,7 @@
-import { redirect } from "react-router-dom";
 import bg from "../../assets/bg-login.svg";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+
 
 import { useState } from "react";
 import "./Login.scss";
@@ -9,10 +10,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showSubmitError, setShowSubmitError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-
+  let navigate = useNavigate();
   const onSubmitSuccuss = (jwtToken) => {
-    Cookies.set("jwt_token", jwtToken, { expires: 30, path: "/" });
-    return redirect("/");
+    console.log("xutaa",jwtToken);
+    
+    return navigate("/");
   };
 
   const onSubmitFailure = () => {
@@ -22,17 +24,23 @@ const Login = () => {
 
   const onSubmitForm = async (event) => {
     event.preventDefault();
-
     const userDetails = { username, password };
-    const apiUrl = "https://apis.ccbp.in/login";
+    const apiUrl = "http://localhost:8080/api/auth/login";
     const options = {
       method: "POST",
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      Authorization: `Bearer`,
+    }),
       body: JSON.stringify(userDetails),
     };
     const response = await fetch(apiUrl, options);
+    
     const data = await response.json();
+    console.log(data);
     if (response.ok === true) {
-      onSubmitSuccuss(data.jwt_token);
+      Cookies.set("jwt_token", data.accessToken, { expires: 30, path: "/" });
+      onSubmitSuccuss(data.accessToken);
     } else {
       onSubmitFailure(data.error_msg);
     }
@@ -47,10 +55,10 @@ const Login = () => {
   };
   const jwtToken = Cookies.get("jwt_token");
   if (jwtToken !== undefined) {
-    return redirect("/");
+    return navigate("/");
   }
   return (
-    <>
+    <div className="login-page">
       <div
         style={{
           backgroundImage: `url(${bg})`,
@@ -72,11 +80,12 @@ const Login = () => {
         </div>
 
         <div className="form-main-container">
-          <form className="form-container" onSubmit={(e) => onSubmitForm(e)}>
+          <form className="form-container" onSubmit={onSubmitForm}>
             <div className="input-container">
               <>
                 <label className="input-label" htmlFor="username">
-                  Username*
+                  Username
+                  <span style={{color :"red"}}>*</span>
                 </label>
                 <input
                   type="text"
@@ -92,7 +101,7 @@ const Login = () => {
             <div className="input-container">
               <>
                 <label className="input-label" htmlFor="password">
-                  Password*
+                  Password<span style={{color :"red"}}>*</span>
                 </label>
                 <input
                   type="password"
@@ -114,7 +123,9 @@ const Login = () => {
               Forgot password
             </a>
             <div className="space-login"></div>
-            <button className="register-button">Register</button>
+            <button className="register-button" onClick={console.log("register")}>
+              Register
+            </button>
           </form>
         </div>
       </div>
@@ -123,9 +134,9 @@ const Login = () => {
           <div>English (UK)</div>
           <div>Tiếng Việt</div>
         </div>
-        <div>Copyright @2023</div>
+        <div>Copyright @ 2023</div>
       </div>
-    </>
+    </div>
   );
 };
 export default Login;
