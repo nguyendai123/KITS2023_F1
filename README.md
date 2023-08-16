@@ -1,4 +1,4 @@
-# KITS2023_G1
+# KITS2023_F1
 Quy trình duyệt code:
 - Code trên nhánh cá nhân
 - Đẩy code lên nhánh devops
