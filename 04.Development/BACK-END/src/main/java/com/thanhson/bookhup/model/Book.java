@@ -18,26 +18,29 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name = "BookID", nullable = false)
+    @Column(name = "BookID")
     private long bookID;
 
-    @Column(name= "Title", length = 255, nullable = false)
+    @Column(name= "Title", length = 255)
     private String title;
 
     @Column(name="Image")
     private String image;
 
-    @Column(name = "Author", length = 50, nullable = false)
+    @Column(name = "Author", length = 50)
     private String author;
 
-    @Column(name="ISBN", length = 50, nullable = false)
+    @Column(name="ISBN", length = 50)
     private String isbn;
 
-    @Column(name = "Summary", nullable = false)
+    @Column(name = "Summary")
     private String summary;
 
-    @Column(name="AverageRating", nullable = false)
+    @Column(name="AverageRating")
     private double averageRating;
+
+    @Column(name="Page")
+    private int page;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -50,6 +53,5 @@ public class Book {
     @OneToMany(mappedBy = "book")
     Set<Progress> progresses;
 
-    @OneToMany(mappedBy = "bookReview")
-    private Set<Review> review;
+
 }

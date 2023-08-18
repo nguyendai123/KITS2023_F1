@@ -20,8 +20,8 @@ public class Genre {
     @Column(name = "GenreID ", nullable = false)
     private long genreID;
 
-    @Column(name = "Title", nullable = false, length = 50)
-    private String GenreName;
+    @Column(name = "GenreName", nullable = false, length = 50)
+    private String genreName;
 
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
     private Set<Book> books = new HashSet<>();

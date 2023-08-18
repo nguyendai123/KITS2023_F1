@@ -22,7 +22,7 @@ public class Follow {
     private User userFol;
 
     @ManyToOne
-    @JoinColumn(name = "FollowerUserID", nullable = false)
+    @JoinColumn(name = "FollowerUserID")
     private User userFollow;
 
     @Column(name = "Status", nullable = false)

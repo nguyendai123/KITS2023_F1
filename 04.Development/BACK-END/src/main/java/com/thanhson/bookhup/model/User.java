@@ -46,15 +46,30 @@ public class User {
     @OneToMany(mappedBy = "userFollow")
     private Set<Follow> follow;
 
-    @OneToMany(mappedBy = "userReview")
-    private Set<Review> reviews;
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "UserID", referencedColumnName = "userID"),
             inverseJoinColumns = @JoinColumn(name = "RoleID", referencedColumnName = "roleID" )
     )
     private Set<Role> roles;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Post> posts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Like> likes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Comment> comments;
+
+    @OneToMany(mappedBy = "createdUser")
+    private Set<Group> group;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Group> groups;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Notification> notifications;
+
 
     public User(String username, String email, String password) {
         this.username = username;
