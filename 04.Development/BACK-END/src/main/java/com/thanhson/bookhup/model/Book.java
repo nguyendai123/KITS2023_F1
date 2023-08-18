@@ -34,6 +34,9 @@ public class Book {
     @Column(name="ISBN", length = 50, nullable = false)
     private String isbn;
 
+    @Column(name="Page", length = 50, nullable = false)
+    private int page;
+
     @Column(name = "Summary", nullable = false)
     private String summary;
 
