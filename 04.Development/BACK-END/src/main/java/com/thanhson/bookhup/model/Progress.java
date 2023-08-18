@@ -22,7 +22,7 @@ public class Progress {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID")
-    private User user;
+    private User userProgress;
 
     @Column(name = "Status", length = 50, nullable = false)
     private String status;

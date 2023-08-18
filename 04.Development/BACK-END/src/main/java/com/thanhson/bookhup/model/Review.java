@@ -28,10 +28,10 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name="UserID")
-    private User userr;
+    private User userReview;
 
     @ManyToOne
     @JoinColumn(name="BookID")
-    private Book bookk;
+    private Book bookReview;
 
 }

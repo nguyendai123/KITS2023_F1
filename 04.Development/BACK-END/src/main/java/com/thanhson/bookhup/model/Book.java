@@ -50,6 +50,6 @@ public class Book {
     @OneToMany(mappedBy = "book")
     Set<Progress> progresses;
 
-    @OneToMany(mappedBy = "bookk")
+    @OneToMany(mappedBy = "bookReview")
     private Set<Review> review;
 }

@@ -16,40 +16,37 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UserID", nullable = false)
+    @Column(name = "UserID")
     private long userID;
 
     @Column(name = "UserName", length = 50, nullable = false)
-    private String userName;
+    private String username;
 
     @Column(name = "Email", length = 50, nullable = false)
     private String email;
 
-    @Column(name = "Password", length = 50, nullable = false)
+    @Column(name = "Password", length = 100, nullable = false)
     private String password;
 
-    @Column(name = "Avatar", length = 255, nullable = false)
+    @Column(name = "Avatar", length = 255)
     private String avatar;
 
-    @Column(name = "Biography", nullable = false)
+    @Column(name = "Biography")
     private String biography;
 
-    @Column(name = "FavoritteGenres", length = 255, nullable = false)
+    @Column(name = "FavoritteGenres", length = 255)
     private String favoriteGenres;
 
-    @Column(name = "Role", length = 50, nullable = false)
-    private String role;
+    @OneToMany(mappedBy = "userProgress")
+    private Set<Progress> progress;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Progress> progresses;
+    @OneToMany(mappedBy = "userFol")
+    private Set<Follow> followUser;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Follow> follows;
-
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "userFollow")
     private Set<Follow> follow;
 
-    @OneToMany(mappedBy = "userr")
+    @OneToMany(mappedBy = "userReview")
     private Set<Review> reviews;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -58,5 +55,11 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "RoleID", referencedColumnName = "roleID" )
     )
     private Set<Role> roles;
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }
 
