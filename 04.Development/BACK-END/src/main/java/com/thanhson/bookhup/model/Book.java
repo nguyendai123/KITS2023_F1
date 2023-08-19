@@ -18,25 +18,25 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name = "BookID")
+    @Column(name = "BookID", nullable = false)
     private long bookID;
 
-    @Column(name= "Title", length = 255)
+    @Column(name= "Title", length = 255, nullable = false)
     private String title;
 
     @Column(name="Image")
     private String image;
 
-    @Column(name = "Author", length = 50)
+    @Column(name = "Author", length = 50, nullable = false)
     private String author;
 
-    @Column(name="ISBN", length = 50)
+    @Column(name="ISBN", length = 50, nullable = false)
     private String isbn;
 
-    @Column(name = "Summary")
+    @Column(name = "Summary", nullable = false)
     private String summary;
 
-    @Column(name="AverageRating")
+    @Column(name="AverageRating", nullable = false)
     private double averageRating;
 
     @Column(name="Page")

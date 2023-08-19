@@ -20,7 +20,7 @@ public class Genre {
     @Column(name = "GenreID ", nullable = false)
     private long genreID;
 
-    @Column(name = "GenreName", nullable = false, length = 50)
+    @Column(name = "Title", nullable = false, length = 50)
     private String genreName;
 
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
