@@ -26,6 +26,9 @@ public class Post {
     @Column(name = "LikeCount")
     private int likeCount;
 
+    @Column(name="Image")
+    private String image;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userID")
     private User user;
