@@ -1,0 +1,11 @@
+.group-container {
+  margin: 0 100px;
+}
+.group-header {
+}
+.group-search {
+  display: flex;
+}
+.group-create-btn {
+  bacground-color: #42b72a;
+}

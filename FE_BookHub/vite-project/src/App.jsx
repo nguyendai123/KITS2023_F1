@@ -6,12 +6,14 @@ import "./App.css";
 import Register from "./components/Register/Register";
 import BookItemDetails from "./components/BookItemDetails/BookItemDetails";
 import BookPage from "./components/BookPage/BookPage";
+import GroupPage from "./components/GroupPage/GroupPage";
 
 const App = () => {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/" element={<GroupPage />} />
         <Route path="login" exact element={<Login />} />
         <Route path="register" exact element={<Register />} />
         <Route path="/books/:id" exact element={<BookItemDetails />} />
