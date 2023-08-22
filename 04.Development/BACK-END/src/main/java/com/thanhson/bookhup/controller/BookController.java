@@ -17,21 +17,21 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/books")
+@RequestMapping("/api")
 public class BookController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping
+    @GetMapping("/books")
     public List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
 
-    @GetMapping("/{bookId}")
+    @GetMapping("/books/{bookId}")
     public Optional<Book> getBookById(@PathVariable long bookId) {
         return bookService.getBookById(bookId);
     }
-    @GetMapping(value="/findByTitle")
+    @GetMapping(value="/books/findByTitle")
     public ResponseEntity<List<Book>> getBooksByTitle(@RequestParam("title") String title) {
         List<Book> books = bookService.findByTitle(title);
         if (books.isEmpty()) {
@@ -40,13 +40,22 @@ public class BookController {
             return ResponseEntity.ok(books);
         }
     }
-    @PostMapping(value = "/add", consumes = "multipart/form-data")
+    @GetMapping("/books/findByAuthor")
+    public ResponseEntity<List<Book>> findByAuthor(@RequestParam("author") String author) {
+        List<Book> books = bookService.findByAuthor(author);
+        if (books.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(books);
+        }
+    }
+    @PostMapping(value = "/books/add", consumes = "multipart/form-data")
     public ResponseEntity<Book> saveBook(@ModelAttribute Book book, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         Book savedBook = bookService.saveBook(book, imageFile);
         return ResponseEntity.ok(savedBook);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/books/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @ModelAttribute Book updatedBook, @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
         Optional<Book> existingBookOptional = bookService.getBookById(id);
 
@@ -82,8 +91,9 @@ public class BookController {
         }
     }
 
-    @DeleteMapping("/{bookId}")
+    @DeleteMapping("/books/{bookId}")
     public void deleteBook(@PathVariable long bookId) throws IOException {
         bookService.deleteBook(bookId);
     }
+
 }

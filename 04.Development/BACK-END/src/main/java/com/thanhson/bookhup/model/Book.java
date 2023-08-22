@@ -54,4 +54,16 @@ public class Book {
     Set<Progress> progresses;
 
 
+    public void addGenre(Genre genre) {
+        this.genres.add(genre);
+        genre.getBooks().add(this);
+    }
+
+    public void removeGenre(long genreID) {
+        Genre genre = this.genres.stream().filter(t -> t.getGenreID() == genreID).findFirst().orElse(null);
+        if (genre != null) {
+            this.genres.remove(genre);
+            genre.getBooks().remove(this);
+        }
+    }
 }

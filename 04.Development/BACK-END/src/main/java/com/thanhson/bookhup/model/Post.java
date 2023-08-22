@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -36,4 +38,13 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
+    public List<User> getLikedUsers() {
+        List<User> likedUsers = new ArrayList<>();
+
+        for (Like like : likes) {
+            likedUsers.add(like.getUser());
+        }
+
+        return likedUsers;
+    }
 }

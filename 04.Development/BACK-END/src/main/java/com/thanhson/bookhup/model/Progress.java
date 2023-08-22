@@ -26,4 +26,7 @@ public class Progress {
 
     @Column(name = "Status")
     private String status;
+
+    @Column(name = "ReadPage")
+    private int readPage;
 }

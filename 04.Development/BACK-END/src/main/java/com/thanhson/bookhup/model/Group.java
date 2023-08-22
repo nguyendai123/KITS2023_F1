@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +29,7 @@ public class Group {
     private String groupDescription;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
+    private LocalDateTime createDate;
 
     @Column(name="PrivacySetting")
     private String privacySetting;
