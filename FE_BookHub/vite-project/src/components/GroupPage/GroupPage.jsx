@@ -30,7 +30,7 @@ const GroupPage = () => {
   };
   return (
     <>
-      <Header page="home" />
+      <Header />
       <div className="group-container">
         <Space className="group-header">
           <button className="group-retry-home">

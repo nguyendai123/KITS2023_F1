@@ -56,7 +56,7 @@ const AdminPage = () => {
   }
   const menuItems = [
     getItem(
-      <Link to="/admin">Dashboard</Link>,
+      <Link to="/">Dashboard</Link>,
       "sub0",
       <Icon icon="carbon:dashboard" />
     ),

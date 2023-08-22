@@ -4,8 +4,15 @@
   }
 }
 .home-page-container {
-  padding: 0 100px;
+  padding: 0 200px;
   display: flex;
+  background-color: #f5f7fa;
+}
+.input-home-add-post {
+  background-color: #e9ecef;
+}
+.home-add-newpost {
+  width: 94%;
 }
 
 .home-page-left-container {
@@ -89,7 +96,7 @@
   padding: 2rem;
   border-radius: 5px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
+  margin-bottom: 20px;
   width: 94%;
 }
 .author-des {
@@ -135,11 +142,19 @@
   border-radius: 5px;
 }
 .btn-post-content-body {
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0.25rem;
   background-color: #0284c7;
+  font-size: 20px;
+}
+.btn-post-content-body-des {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0.5rem;
 }
 .post__comment {
   margin-top: 0.75rem;
@@ -207,9 +222,10 @@
   margin: 4px 2px;
 }
 .home-page-right-container {
+  padding-top: 20px;
   width: 30%;
 }
-@media screen and (max-width: 787px) {
+@media screen and (max-width: 1280px) {
   .home-page-right-container {
     display: none;
   }
@@ -224,6 +240,9 @@
   border-radius: 5px;
   padding-bottom: 35px;
 }
+.home-rating-book {
+  margin: 20px 0;
+}
 
 .top-rated-heading-container {
   display: flex;
@@ -236,6 +255,7 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
+  margin-bottom: 20px;
 }
 .number-book-item {
   display: flex;

@@ -3,13 +3,76 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { RiCloseCircleFill } from "react-icons/ri";
-
+import { Input, Space, Menu } from "antd";
+const { Search } = Input;
 import "./Header.css";
 import { useState } from "react";
-
+const items = [
+  {
+    label: (
+      <Link className="link" to="/">
+        Home
+      </Link>
+    ),
+    key: "home",
+  },
+  {
+    label: (
+      <Link className="link" to="/rating">
+        Ratings
+      </Link>
+    ),
+    key: "rating",
+  },
+  {
+    label: (
+      <Link className="link" to="/shelf">
+        Bookshelves
+      </Link>
+    ),
+    key: "shelf",
+  },
+  {
+    label: (
+      <Link className="link" to="/genres">
+        Genres
+      </Link>
+    ),
+    key: "genres",
+  },
+  {
+    label: (
+      <Link className="link" to="/favorites">
+        MyFavorites
+      </Link>
+    ),
+    key: "favorites",
+  },
+  {
+    label: (
+      <Link className="link" to="/authors">
+        Authors
+      </Link>
+    ),
+    key: "authors",
+  },
+  {
+    label: (
+      <Link className="link" to="/group">
+        Group
+      </Link>
+    ),
+    key: "group",
+  },
+];
 // eslint-disable-next-line react/prop-types
-const Header = ({ page }) => {
+const Header = () => {
   const [displayNavbar, setDisplayNavbar] = useState(false);
+  const [current, setCurrent] = useState("home");
+  const onClick = (e) => {
+    console.log("click ", e);
+    setCurrent(e.key);
+  };
   let navigate = useNavigate();
   const onClickMenu = () => {
     setDisplayNavbar(!displayNavbar);
@@ -30,14 +93,13 @@ const Header = ({ page }) => {
   };
 
   // eslint-disable-next-line react/prop-types
-  const { home, shelves, favorite } = page;
-  const activeHome = home ? "active-tab" : "";
-  const activeShelves = shelves ? "active-tab" : "";
-  const activeFavorite = favorite ? "active-tab" : "";
 
   return (
     <div>
-      <div className="header-container">
+      <div
+        className="header-container"
+        style={{ display: "flex", alignItems: "center" }}
+      >
         <div className="header-website-logo1">
           <Link to="/">
             <>
@@ -50,26 +112,29 @@ const Header = ({ page }) => {
             </>
           </Link>
         </div>
-        <ul className="tabs-container">
-          <Link className="link" to="/">
-            <li className={`list-item  ${activeHome}`}>Home</li>
-          </Link>
-          <Link className="link" to="/shelf">
-            <li className={`list-item ${activeShelves}`}>Bookshelves</li>
-          </Link>
-          <Link className="link" to="/favorites">
-            <li className={`list-item ${activeFavorite}`}>MyFavorites</li>
-          </Link>
-          <li className="list-item">
-            <button
-              onClick={onClickLogout}
-              className="logout-btn"
-              type="button"
-            >
-              Logout
-            </button>
-          </li>
-        </ul>
+        <Search
+          placeholder="input search text"
+          allowClear
+          enterButton="Search"
+          style={{ maxWidth: "350px" }}
+        />
+
+        <Menu
+          style={{
+            height: "35px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onClick={onClick}
+          selectedKeys={[current]}
+          mode="horizontal"
+          items={items}
+        />
+
+        <button onClick={onClickLogout} className="logout-btn" type="button">
+          Logout
+        </button>
       </div>
       <div className="header-navbar-responsive-container">
         <div className="header-nav-container">
@@ -93,17 +158,13 @@ const Header = ({ page }) => {
           <>
             <div className="header-navbar-tabs-container">
               <Link className="link" to="/">
-                <h1 className={`list-item home-tab ${activeHome}`}>Home</h1>
+                <h1 className={`list-item home-tab`}>Home</h1>
               </Link>
               <Link className="link" to="/shelf">
-                <h1 className={`bookshelves-tab ${activeShelves}`}>
-                  BookShelves
-                </h1>
+                <h1 className={`bookshelves-tab`}>BookShelves</h1>
               </Link>
               <Link className="link" to="/favorites">
-                <h1 className={`bookshelves-tab ${activeFavorite}`}>
-                  MyFavorites
-                </h1>
+                <h1 className={`bookshelves-tab`}>MyFavorites</h1>
               </Link>
             </div>
             <div className="header-navbar-tabs-container">
