@@ -37,6 +37,10 @@ public class User {
     @Column(name = "FavoritteGenres", length = 255)
     private String favoriteGenres;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private EUser isActive;
+
     @OneToMany(mappedBy = "userProgress")
     private Set<Progress> progress;
 

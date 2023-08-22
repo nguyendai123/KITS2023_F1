@@ -39,4 +39,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "BookID")
+    private Book book;
 }

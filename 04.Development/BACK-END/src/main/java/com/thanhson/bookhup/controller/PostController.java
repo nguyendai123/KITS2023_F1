@@ -1,5 +1,6 @@
 package com.thanhson.bookhup.controller;
 
+import com.thanhson.bookhup.dto.PostDto;
 import com.thanhson.bookhup.model.Post;
 import com.thanhson.bookhup.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,15 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+    public ResponseEntity<Post> createPost(@RequestBody PostDto postRequest) {
+        Post post = new Post();
+        post.setContent(postRequest.getContent());
+        post.setImage(postRequest.getImage());
+
         Post createdPost = postService.createPost(post);
         return ResponseEntity.ok(createdPost);
     }
-    @PutMapping("/{id}")
+@PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post post) {
         Post updatedPost = postService.updatePost(id, post);
         if (updatedPost != null) {

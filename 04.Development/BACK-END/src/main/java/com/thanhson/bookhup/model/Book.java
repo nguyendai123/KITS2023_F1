@@ -53,5 +53,8 @@ public class Book {
     @OneToMany(mappedBy = "book")
     Set<Progress> progresses;
 
+    @OneToMany(mappedBy = "book")
+    Set<Post> posts;
+
 
 }
