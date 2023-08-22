@@ -42,11 +42,14 @@ public class Book {
     @Column(name="Page")
     private int page;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinTable(
             name = "book_genre",
-            joinColumns = @JoinColumn(name = "BookID"),
-            inverseJoinColumns = @JoinColumn(name = "GenreID")
+            joinColumns = {@JoinColumn(name = "BookID")},
+            inverseJoinColumns = {@JoinColumn(name = "GenreID")}
     )
     private Set<Genre> genres = new HashSet<>();
 

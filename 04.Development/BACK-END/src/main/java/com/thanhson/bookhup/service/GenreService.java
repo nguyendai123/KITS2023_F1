@@ -22,7 +22,7 @@ public class GenreService {
     }
 
     public List<Genre> findByName(String genreName) {
-        return genreRepository.findByName(genreName);
+        return genreRepository.findByGenreName(genreName);
     }
 
     public Genre createGenre(Genre genre) {

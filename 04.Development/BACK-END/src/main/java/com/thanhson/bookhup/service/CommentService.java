@@ -24,8 +24,8 @@ public class CommentService {
     private UserService userService;
 
 
-    public List<Comment> findAllByPostId(long id) {
-        return commentRepository.findAllByPostIdOrderByCreatedDesc(id);
+    public List<Comment> findAllByPostId(long postID) {
+        return commentRepository.findAllByPost_PostIDOrderByCreateAtDesc(postID);
     }
 
     public Comment saveComment(Long postId, Long userId, Comment comment) {

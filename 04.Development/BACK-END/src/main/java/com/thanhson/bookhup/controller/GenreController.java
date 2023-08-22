@@ -44,7 +44,7 @@ public class GenreController {
             throw new ResourceNotFoundException("Not found Tutorial with id = " + bookID);
         }
 
-        List<Genre> genres = genreRepository.findGenresByBooksId(bookID);
+        List<Genre> genres = genreRepository.findGenresByBooks_BookID(bookID);
         return new ResponseEntity<>(genres, HttpStatus.OK);
     }
 
@@ -54,7 +54,7 @@ public class GenreController {
             throw new ResourceNotFoundException("Not found Tag  with id = " + genreID);
         }
 
-        List<Book> books = bookRepository.findBooksByGenresId(genreID);
+        List<Book> books = bookRepository.findBooksByGenres_GenreID(genreID);
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
     @GetMapping(value="/findByName")

@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Long> {
 
-    List<Genre> findByName(String genreName);
+    List<Genre> findByGenreName(String genreName);
 
-    List<Genre> findGenresByBooksId(Long bookID);
+    List<Genre> findGenresByBooks_BookID(Long bookID);
 }
