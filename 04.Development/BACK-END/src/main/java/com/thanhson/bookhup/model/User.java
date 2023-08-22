@@ -46,7 +46,7 @@ public class User {
     @OneToMany(mappedBy = "userFollow")
     private Set<Follow> follow;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "UserID", referencedColumnName = "userID"),
             inverseJoinColumns = @JoinColumn(name = "RoleID", referencedColumnName = "roleID" )
