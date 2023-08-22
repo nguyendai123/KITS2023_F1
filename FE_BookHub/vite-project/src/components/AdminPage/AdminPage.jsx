@@ -61,12 +61,12 @@ const AdminPage = () => {
       <Icon icon="carbon:dashboard" />
     ),
     getItem("Charts", "sub1", <PieChartOutlined />, [
-      getItem(<Link to="/books1">Books</Link>, "1"),
-      getItem(<Link to="/reports">Report</Link>, "2"),
+      getItem(<Link to="/admin/books">Books</Link>, "1"),
+      getItem(<Link to="/admin/reports">Report</Link>, "2"),
     ]),
     getItem("Management", "sub2", <AppstoreOutlined />, [
-      getItem(<Link to="/users">Users</Link>, "4"),
-      getItem(<Link to="/settings">Setting</Link>, "5"),
+      getItem(<Link to="/admin/users">Users</Link>, "4"),
+      getItem(<Link to="/admin/settings">Setting</Link>, "5"),
     ]),
   ];
   const items = [
@@ -119,11 +119,18 @@ const AdminPage = () => {
         >
           <Header className="sider-header">
             <Space>
-              {/* {collapsed ? (
-                <Image src="public\logo-collapsed.png" preview={false} />
+              {collapsed ? (
+                <Image
+                  src="https://res.cloudinary.com/dkxxgpzd8/image/upload/v1647190320/Group_7731_v0p1nt_gjeokw.png"
+                  preview={false}
+                />
               ) : (
-                <Image width={100} src="public\logo.png" preview={false} />
-              )} */}
+                <Image
+                  width={100}
+                  src="https://res.cloudinary.com/dkxxgpzd8/image/upload/v1647190320/Group_7731_v0p1nt_gjeokw.png"
+                  preview={false}
+                />
+              )}
             </Space>
           </Header>
           {collapsed ? (
@@ -180,7 +187,7 @@ const AdminPage = () => {
           <Content className="content">
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="books1" element={<Books />} />
+              <Route path="books" element={<Books />} />
               <Route path="reports" element={<Report />} />
               <Route path="settings" element={<Settings />} />
               <Route path="users" element={<Users />} />

@@ -115,7 +115,7 @@ const Home = () => {
   const getTopRatedBooks = async () => {
     setTopRatedApiStatus(topRatedApiStatuses.inProgress);
 
-    const topRatedBooksApi = "https://apis.ccbp.in/book-hub/top-rated-books";
+    const topRatedBooksApi = "http://localhost:8080/api/books";
     const jwtToken = Cookies.get("jwt_token");
     const options = {
       method: "GET",
@@ -126,15 +126,16 @@ const Home = () => {
     const response = await fetch(topRatedBooksApi, options);
     if (response.ok === true) {
       const fetchedData = await response.json();
+      console.log("ldll", fetchedData);
       const booksList = fetchedData.books;
-      const updatedData = booksList.map((eachBook) => ({
-        id: eachBook.id,
-        authorName: eachBook.author_name,
-        coverPic: eachBook.cover_pic,
-        title: eachBook.title,
-      }));
+      // const updatedData = booksList.map((eachBook) => ({
+      //   id: eachBook.id,
+      //   authorName: eachBook.author_name,
+      //   coverPic: eachBook.cover_pic,
+      //   title: eachBook.title,
+      // }));
       setTopRatedApiStatus(topRatedApiStatuses.success);
-      setTopRatedBooks(updatedData);
+      // setTopRatedBooks(updatedData);
     } else {
       setTopRatedApiStatus(topRatedApiStatuses.failure);
     }

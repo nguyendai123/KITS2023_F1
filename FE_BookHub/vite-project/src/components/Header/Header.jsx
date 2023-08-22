@@ -18,11 +18,11 @@ const items = [
   },
   {
     label: (
-      <Link className="link" to="/rating">
+      <Link className="link" to="/ratings">
         Ratings
       </Link>
     ),
-    key: "rating",
+    key: "ratings",
   },
   {
     label: (
@@ -58,11 +58,11 @@ const items = [
   },
   {
     label: (
-      <Link className="link" to="/group">
+      <Link className="link" to="/groups">
         Group
       </Link>
     ),
-    key: "group",
+    key: "groups",
   },
 ];
 // eslint-disable-next-line react/prop-types

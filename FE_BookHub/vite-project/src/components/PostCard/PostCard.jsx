@@ -111,6 +111,13 @@ function PostCard() {
               fuga incidunt consequatur tenetur doloremque officia corrupti
               provident tempore vitae labore?
             </p>
+            <div className="post-content-image-user-add">
+              <img
+                src="https://source.unsplash.com/random/120"
+                alt="post image"
+                className="post-content-image-user-add-1"
+              />
+            </div>
             <div className="post-content-body">
               <img
                 src="https://source.unsplash.com/random/12"
