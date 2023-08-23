@@ -49,6 +49,10 @@ public class BookController {
             return ResponseEntity.ok(books);
         }
     }
+    @GetMapping("/books/authors")
+    public List<String> getAllAuthors() {
+        return bookService.getAllAuthors();
+    }
     @PostMapping(value = "/books/add", consumes = "multipart/form-data")
     public ResponseEntity<Book> saveBook(@ModelAttribute Book book, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         Book savedBook = bookService.saveBook(book, imageFile);
@@ -68,7 +72,6 @@ public class BookController {
         existingBook.setAuthor(updatedBook.getAuthor());
         existingBook.setIsbn(updatedBook.getIsbn());
         existingBook.setPage(updatedBook.getPage());
-        existingBook.setAverageRating(updatedBook.getAverageRating());
         existingBook.setSummary(updatedBook.getSummary());
 
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -96,4 +99,23 @@ public class BookController {
         bookService.deleteBook(bookId);
     }
 
+    @GetMapping("/books/desired")
+    public List<Book> getBooksWithDesiredStatus() {
+        return bookService.findBooksWithDesiredStatus();
+    }
+
+    @GetMapping("/books/reading")
+    public List<Book> getBooksWithReadingStatus() {
+        return bookService.findBooksWithReadingStatus();
+    }
+
+    @GetMapping("/books/readed")
+    public List<Book> getBooksWithReadedStatus() {
+        return bookService.findBooksWithReadedStatus();
+    }
+
+    @GetMapping("/books/status")
+    public List<Book> getBooksWithStatus() {
+        return bookService.findBooksWithStatus();
+    }
 }

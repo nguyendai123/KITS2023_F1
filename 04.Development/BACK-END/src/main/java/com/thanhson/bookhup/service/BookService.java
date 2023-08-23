@@ -54,4 +54,26 @@ public class BookService {
     public List<Book> findByAuthor(String author) {
         return bookRepository.findByAuthor(author);
     }
+
+    public List<String> getAllAuthors() {
+        return bookRepository.findAllAuthors();
+    }
+
+
+    public List<Book> findBooksWithDesiredStatus() {
+        return bookRepository.findBooksWithDesiredStatus();
+    }
+
+    public List<Book> findBooksWithReadingStatus() {
+        return bookRepository.findBooksWithReadingStatus();
+    }
+
+    public List<Book> findBooksWithReadedStatus() {
+        return bookRepository.findBooksWithReadedStatus();
+    }
+
+    public List<Book> findBooksWithStatus() {
+        return bookRepository.findBooksWithStatus();
+    }
+
 }

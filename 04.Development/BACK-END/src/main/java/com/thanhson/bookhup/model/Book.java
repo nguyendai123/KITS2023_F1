@@ -36,9 +36,6 @@ public class Book {
     @Column(name = "Summary", nullable = false)
     private String summary;
 
-    @Column(name="AverageRating", nullable = false)
-    private double averageRating;
-
     @Column(name="Page")
     private int page;
 

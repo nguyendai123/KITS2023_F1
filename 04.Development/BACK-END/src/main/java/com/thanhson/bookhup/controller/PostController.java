@@ -115,6 +115,7 @@ public class PostController {
 
 
         existingPost.setContent(updatedPost.getContent());
+        existingPost.setRating(updatedPost.getRating());
 
 
         postService.save(existingPost);
