@@ -15,15 +15,15 @@ public class ProgressController {
     @Autowired
     private ProgressService progressService;
 
-    @PostMapping("/create")
-    public ResponseEntity<Progress> createProgress(@RequestBody Progress progress) {
-        Progress createdProgress = progressService.saveProgress(progress);
-        return ResponseEntity.ok(createdProgress);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Progress> getProgressById(@PathVariable long id) {
-        Progress progress = progressService.getProgressById(id);
-        return ResponseEntity.ok(progress);
-    }
+//    @PostMapping("/create")
+//    public ResponseEntity<Progress> createProgress(@RequestBody Progress progress) {
+//        Progress createdProgress = progressService.saveProgress(progress);
+//        return ResponseEntity.ok(createdProgress);
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Progress> getProgressById(@PathVariable long id) {
+//        Progress progress = progressService.getProgressById(id);
+//        return ResponseEntity.ok(progress);
+//    }
 }

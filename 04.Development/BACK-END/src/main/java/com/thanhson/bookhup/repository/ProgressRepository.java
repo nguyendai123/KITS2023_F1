@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface ProgressRepository extends JpaRepository<Progress, Long> {
-    List<Progress> findByStatus(String status);
+//    List<Progress> findByStatus(String status);
 }

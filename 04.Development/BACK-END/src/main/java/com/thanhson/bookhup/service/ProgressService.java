@@ -13,12 +13,12 @@ public class ProgressService {
     @Autowired
     private ProgressRepository progressRepository;
 
-    public Progress saveProgress(Progress progress) {
-        return progressRepository.save(progress);
-    }
-
-    public Progress getProgressById(long id) {
-        return progressRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Progress not found"));
-    }
+//    public Progress saveProgress(Progress progress) {
+//        return progressRepository.save(progress);
+//    }
+//
+//    public Progress getProgressById(long id) {
+//        return progressRepository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Progress not found"));
+//    }
 }

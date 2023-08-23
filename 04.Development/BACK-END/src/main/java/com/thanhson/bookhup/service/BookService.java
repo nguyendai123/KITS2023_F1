@@ -49,7 +49,6 @@ public class BookService {
 
         FileUploadUtil.deleteFile(uploadDir);
         bookRepository.deleteById(bookId);
-
     }
 
     public List<Book> findByAuthor(String author) {

@@ -29,6 +29,7 @@ public class SpringSecurityConfig {
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     authorize.requestMatchers("/api/books/**").permitAll();
                     authorize.requestMatchers("/api/genres/**").permitAll();
+                    authorize.requestMatchers("/api/posts/**").permitAll();
                     authorize.anyRequest().authenticated();
                 });
         return http.build();
