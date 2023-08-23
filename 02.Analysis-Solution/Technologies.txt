@@ -1,0 +1,21 @@
+Môi trường:
+
+Visual studio code(FE)
+
+Intellij(BE)
+
+MYSQL(Database)
+
+Công nghệ sử dụng:
+
+Java(Spring Boot)
+
+ReactJS
+
+HTML
+
+CSS
+
+Javascripts
+
+MariaDB
