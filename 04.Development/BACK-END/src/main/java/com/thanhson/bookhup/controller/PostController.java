@@ -2,7 +2,9 @@ package com.thanhson.bookhup.controller;
 
 import com.thanhson.bookhup.dto.PostDto;
 import com.thanhson.bookhup.model.Post;
+import com.thanhson.bookhup.model.User;
 import com.thanhson.bookhup.service.PostService;
+import com.thanhson.bookhup.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
     private PostService postService;
+
+    private UserService userService;
 
     @Autowired
     public PostController(PostService postService){
@@ -36,11 +41,10 @@ public class PostController {
         Post post = new Post();
         post.setContent(postRequest.getContent());
         post.setImage(postRequest.getImage());
-
         Post createdPost = postService.createPost(post);
         return ResponseEntity.ok(createdPost);
     }
-@PutMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post post) {
         Post updatedPost = postService.updatePost(id, post);
         if (updatedPost != null) {
