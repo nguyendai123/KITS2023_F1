@@ -76,5 +76,14 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+    public User(long userID, String username, String email, String avatar, String biography, String favoriteGenres) {
+        this.userID = userID;
+        this.username = username;
+        this.email = email;
+        this.avatar = avatar;
+        this.biography = biography;
+        this.favoriteGenres = favoriteGenres;
+    }
 }
 

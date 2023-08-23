@@ -1,5 +1,8 @@
 package com.thanhson.bookhup.response;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class MessageResponse {
     private String message;
 

@@ -36,4 +36,7 @@ public class PostService {
         return postRepository.saveAndFlush(post).getPostID();
     }
 
+    public void delete(Post post) {
+        postRepository.delete(post);
+    }
 }

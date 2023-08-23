@@ -98,12 +98,42 @@ public class PostController {
         postService.save(post);
         return ResponseEntity.ok("Post created successfully.");
     }
-//    @PutMapping("/posts/{postID}")
-//    public ResponseEntity<Post> updateBook(@PathVariable("postID") Long postID, @RequestBody @Valid Post updatedPost,
-//                                         ){
-//        Post existingPostOptional = postService.getPostById(postID);
-//
-//    }
+    @PutMapping("/posts/update/{postID}")
+    public ResponseEntity<String> updatePost(
+            @PathVariable Long postID,
+            @RequestBody @Valid Post updatedPost,
+            BindingResult result) {
+
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body("Invalid input data.");
+        }
+
+        Post existingPost = postService.getPostById(postID);
+        if (existingPost == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        existingPost.setContent(updatedPost.getContent());
+
+
+        postService.save(existingPost);
+
+        return ResponseEntity.ok("Post updated successfully.");
+    }
+    @DeleteMapping("/posts/delete/{postID}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postID) {
+        Post post = postService.getPostById(postID);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // You can add additional checks here if needed, such as checking user authorization
+
+        postService.delete(post);
+
+        return ResponseEntity.ok("Post deleted successfully.");
+    }
     @GetMapping("/{postId}/liked-users")
     public ResponseEntity<List<String>> getLikedUserNames(@PathVariable Long postID) {
         Optional<Post> optionalPost = postRepository.findById(postID);
