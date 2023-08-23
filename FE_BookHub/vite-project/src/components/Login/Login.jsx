@@ -140,7 +140,7 @@ const Login = () => {
           <div>English (UK)</div>
           <div>Tiếng Việt</div>
         </div>
-        <div>Copyright @ 2023</div>
+        <div>Copyright @ 2023 by F1</div>
       </div>
     </div>
   );

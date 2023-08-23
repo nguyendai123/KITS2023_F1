@@ -11,7 +11,9 @@ import "./Home.css";
 import { useEffect, useState } from "react";
 import PostCard from "../PostCard/PostCard";
 import RatingBookItem from "../RatingBookItem/RatingBookItem";
-import { Button, Modal } from "antd";
+import AddPostHome from "./AddPostHome/AddPostHome";
+import useFetch from "../customize/fetch";
+import axios from "axios";
 const text = `
   A dog is a type of domesticated animal.
   Known for its loyalty and faithfulness,
@@ -105,7 +107,12 @@ const Home = () => {
   );
   const [openComment, setOpenComment] = useState(false);
   const [topRatedBooks, setTopRatedBooks] = useState([]);
-  const [open, setOpen] = useState(false);
+  const {
+    data: dataPosts,
+    isLoading,
+    isError,
+  } = useFetch("http://localhost:8080/api/posts", false);
+  console.log("posts", dataPosts);
 
   let navigate = useNavigate();
   useEffect(() => {
@@ -256,97 +263,19 @@ const Home = () => {
             placeholder="Tạo bài viết của bạn"
             onClick={renderNewPost}
           /> */}
-          <div className="home-add-newpost bg-white p-3 mt-3 rounded border shadow mb-3">
-            {/* avatar */}
-            <div className="d-flex" type="button">
-              <div className="p-1">
-                <img
-                  src="https://source.unsplash.com/collection/happy-people"
-                  alt="avatar"
-                  className="rounded-circle me-2"
-                  style={{
-                    width: "38px",
-                    height: "38px",
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
-              <button
-                className="form-control rounded-pill border-0 pointer pe-auto"
-                onClick={() => setOpen(true)}
-              >
-                <input
-                  type="text"
-                  role="button"
-                  className="input-home-add-post form-control rounded-pill border-0 bg-gray pointer pe-auto"
-                  placeholder="What's on your mind, John dai?"
-                  data-bs-toggle="modal"
-                  data-bs-target="#createModal"
-                />
-              </button>
-              <Modal
-                title="Modal 1000px width"
-                centered
-                open={open}
-                onOk={() => setOpen(false)}
-                onCancel={() => setOpen(false)}
-                width={1000}
-              >
-                <p>some contents...</p>
-                <p>some contents...</p>
-                <p>some contents...</p>
-              </Modal>
-            </div>
-
-            <div className="d-flex flex-column flex-lg-row mt-3">
-              {/* a 1 */}
-              <div
-                className="
-                      dropdown-item
-                      rounded
-                      d-flex
-                      align-items-center
-                      justify-content-center
-                    "
-                type="button"
-              >
-                <i className="fas fa-video me-2 text-danger" />
-                <p className="m-0 text-muted">Book</p>
-              </div>
-              {/* a 2 */}
-              <div
-                className="
-                      dropdown-item
-                      rounded
-                      d-flex
-                      align-items-center
-                      justify-content-center
-                    "
-                type="button"
-              >
-                <i className="fas fa-photo-video me-2 text-success" />
-                <p className="m-0 text-muted">Photo/Video</p>
-              </div>
-              {/* a 3 */}
-              <div
-                className="
-                      dropdown-item
-                      rounded
-                      d-flex
-                      align-items-center
-                      justify-content-center
-                    "
-                type="button"
-              >
-                <i className="fas fa-smile me-2 text-warning" />
-                <p className="m-0 text-muted">Feeling/Activity</p>
-              </div>
-            </div>
-          </div>
+          <AddPostHome />
           {/* p 1 */}
           <div>
-            <PostCard />
-            <PostCard />
+            <PostCard
+              data={dataPosts}
+              isError={isError}
+              isLoading={isLoading}
+            />
+            <PostCard
+              data={dataPosts}
+              isError={isError}
+              isLoading={isLoading}
+            />
           </div>
         </div>
         <div className="home-page-right-container">
