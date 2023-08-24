@@ -1,6 +1,5 @@
 package com.thanhson.bookhup.controller;
 
-
 import com.thanhson.bookhup.dto.SigninDto;
 import com.thanhson.bookhup.dto.SignupDto;
 import com.thanhson.bookhup.jwts.JwtUtils;
@@ -11,9 +10,12 @@ import com.thanhson.bookhup.repository.RoleRepository;
 import com.thanhson.bookhup.repository.UserRepository;
 import com.thanhson.bookhup.response.JwtResponse;
 import com.thanhson.bookhup.response.MessageResponse;
+import com.thanhson.bookhup.service.EmailService;
 import com.thanhson.bookhup.service.UserDetailsImpl;
+import com.thanhson.bookhup.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +39,12 @@ public class AuthController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     RoleRepository roleRepository;
@@ -115,5 +123,27 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @GetMapping("/resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestParam("usernameOrEmail") String usernameOrEmail) {
+        Boolean check = userService.checkUsernameOrEmailExisted(usernameOrEmail, usernameOrEmail);
+        MessageResponse messageResponse = new MessageResponse();
+
+        if (check) {
+            String newPassword = userService.generateRandomPassword();
+            userService.changePassword(usernameOrEmail, newPassword);
+            boolean status = emailService.sendMailResetPassword(newPassword, usernameOrEmail);
+            if (status) {
+                messageResponse.setMessage("Sent mail to reset password successful.");
+                return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+            } else {
+                messageResponse.setMessage("Sent mail to reset password failed.");
+                return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            messageResponse.setMessage("Can not find user with username or email: " + usernameOrEmail);
+            return new ResponseEntity<>(messageResponse, HttpStatus.NOT_FOUND);
+        }
     }
 }

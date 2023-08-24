@@ -47,10 +47,7 @@ public class User {
     private Set<Follow> follow;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles",
-        joinColumns = @JoinColumn(name = "UserID", referencedColumnName = "userID"),
-            inverseJoinColumns = @JoinColumn(name = "RoleID", referencedColumnName = "roleID" )
-    )
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "UserID", referencedColumnName = "userID"), inverseJoinColumns = @JoinColumn(name = "RoleID", referencedColumnName = "roleID"))
     private Set<Role> roles;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Post> posts;
@@ -70,11 +67,18 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Notification> notifications;
 
-
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
     }
-}
 
+    public User(long userID, String username, String email, String avatar, String biography, String favoriteGenres) {
+        this.userID = userID;
+        this.username = username;
+        this.email = email;
+        this.avatar = avatar;
+        this.biography = biography;
+        this.favoriteGenres = favoriteGenres;
+    }
+}

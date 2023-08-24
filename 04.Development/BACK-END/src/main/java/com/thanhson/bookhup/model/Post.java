@@ -15,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="posts")
+@Table(name = "posts")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,8 @@ public class Post {
     private LocalDateTime createDate;
     @Column(name = "LikeCount")
     private int likeCount;
-
+    @Column(name = "Rating")
+    private double rating;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userID")
     private User user;

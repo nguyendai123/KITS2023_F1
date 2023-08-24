@@ -19,7 +19,6 @@ import {
   UserOutlined,
   MenuOutlined,
   AppstoreOutlined,
-  PieChartOutlined,
 } from "@ant-design/icons";
 import { Icon } from "@iconify/react";
 
@@ -56,15 +55,12 @@ const AdminPage = () => {
   }
   const menuItems = [
     getItem(
-      <Link to="/">Dashboard</Link>,
+      <Link to="/admin">Dashboard</Link>,
       "sub0",
       <Icon icon="carbon:dashboard" />
     ),
-    getItem("Charts", "sub1", <PieChartOutlined />, [
-      getItem(<Link to="/admin/books">Books</Link>, "1"),
-      getItem(<Link to="/admin/reports">Report</Link>, "2"),
-    ]),
     getItem("Management", "sub2", <AppstoreOutlined />, [
+      getItem(<Link to="/admin/books">Books</Link>, "1"),
       getItem(<Link to="/admin/users">Users</Link>, "4"),
       getItem(<Link to="/admin/settings">Setting</Link>, "5"),
     ]),

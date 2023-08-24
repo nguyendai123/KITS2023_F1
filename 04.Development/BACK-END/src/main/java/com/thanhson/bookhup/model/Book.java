@@ -21,41 +21,34 @@ public class Book {
     @Column(name = "BookID", nullable = false)
     private long bookID;
 
-    @Column(name= "Title", length = 255, nullable = false)
+    @Column(name = "Title", length = 255, nullable = false)
     private String title;
 
-    @Column(name="Image")
+    @Column(name = "Image")
     private String image;
 
     @Column(name = "Author", length = 50, nullable = false)
     private String author;
 
-    @Column(name="ISBN", length = 50, nullable = false)
+    @Column(name = "ISBN", length = 50, nullable = false)
     private String isbn;
 
     @Column(name = "Summary", nullable = false)
     private String summary;
 
-    @Column(name="AverageRating", nullable = false)
-    private double averageRating;
-
-    @Column(name="Page")
+    @Column(name = "Page")
     private int page;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
-    @JoinTable(
-            name = "book_genre",
-            joinColumns = {@JoinColumn(name = "BookID")},
-            inverseJoinColumns = {@JoinColumn(name = "GenreID")}
-    )
+    @JoinTable(name = "book_genre", joinColumns = { @JoinColumn(name = "BookID") }, inverseJoinColumns = {
+            @JoinColumn(name = "GenreID") })
     private Set<Genre> genres = new HashSet<>();
 
     @OneToMany(mappedBy = "book")
     Set<Progress> progresses;
-
 
     public void addGenre(Genre genre) {
         this.genres.add(genre);

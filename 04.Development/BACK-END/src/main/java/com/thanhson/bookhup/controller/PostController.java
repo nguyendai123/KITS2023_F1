@@ -1,6 +1,5 @@
 package com.thanhson.bookhup.controller;
 
-
 import com.thanhson.bookhup.exception.ResourceNotFoundException;
 import com.thanhson.bookhup.model.*;
 
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -40,6 +38,7 @@ public class PostController {
 
     @Autowired
     private UserService userService;
+
     @GetMapping("/posts")
     public ResponseEntity<List<Post>> getAllPosts() {
         List<Post> posts = postService.findAll();
@@ -48,8 +47,7 @@ public class PostController {
 
     @GetMapping("/posts/view")
     public ResponseEntity<Object> viewPost(
-                                           @RequestParam(required = false) Long postID) {
-
+            @RequestParam(required = false) Long postID) {
 
         if (postID == null) {
             Post newPost = new Post();
@@ -71,17 +69,19 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value ="/posts/create/{userId}")
+    @PostMapping(value = "/posts/create/{userId}")
     public ResponseEntity<String> createPost(@PathVariable Long userId,
-                                             @RequestBody @Valid Post post,
-                                             BindingResult result) {
+            @RequestBody @Valid Post post,
+            BindingResult result) {
         User loggedInUser = userService.getUserById(userId);
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body("Invalid input data.");
         }
 
         Long selectedBookID = post.getBook().getBookID();
-        Book selectedBook = bookService.getBookById(selectedBookID).orElseThrow(() -> new ResourceNotFoundException("Selected book not found."));; // Đảm bảo bạn đã cài đặt phương thức này
+        Book selectedBook = bookService.getBookById(selectedBookID)
+                .orElseThrow(() -> new ResourceNotFoundException("Selected book not found."));
+        ; // Đảm bảo bạn đã cài đặt phương thức này
 
         if (selectedBook == null) {
             return ResponseEntity.badRequest().body("Selected book not found.");
@@ -98,12 +98,45 @@ public class PostController {
         postService.save(post);
         return ResponseEntity.ok("Post created successfully.");
     }
-//    @PutMapping("/posts/{postID}")
-//    public ResponseEntity<Post> updateBook(@PathVariable("postID") Long postID, @RequestBody @Valid Post updatedPost,
-//                                         ){
-//        Post existingPostOptional = postService.getPostById(postID);
-//
-//    }
+
+    @PutMapping("/posts/update/{postID}")
+    public ResponseEntity<String> updatePost(
+            @PathVariable Long postID,
+            @RequestBody @Valid Post updatedPost,
+            BindingResult result) {
+
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body("Invalid input data.");
+        }
+
+        Post existingPost = postService.getPostById(postID);
+        if (existingPost == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        existingPost.setContent(updatedPost.getContent());
+        existingPost.setRating(updatedPost.getRating());
+
+        postService.save(existingPost);
+
+        return ResponseEntity.ok("Post updated successfully.");
+    }
+
+    @DeleteMapping("/posts/delete/{postID}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postID) {
+        Post post = postService.getPostById(postID);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // You can add additional checks here if needed, such as checking user
+        // authorization
+
+        postService.delete(post);
+
+        return ResponseEntity.ok("Post deleted successfully.");
+    }
+
     @GetMapping("/{postId}/liked-users")
     public ResponseEntity<List<String>> getLikedUserNames(@PathVariable Long postID) {
         Optional<Post> optionalPost = postRepository.findById(postID);

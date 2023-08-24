@@ -28,7 +28,8 @@ public class BookService {
     public List<Book> findByTitle(String title) {
         return bookRepository.findByTitle(title);
     }
-    public Book saveBook(Book book, MultipartFile imageFile) throws IOException {
+
+    public Book saveBookwithMultiFile(Book book, MultipartFile imageFile) throws IOException {
         String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
         book.setImage(fileName);
 
@@ -43,6 +44,10 @@ public class BookService {
         return savedBook;
     }
 
+    public Book saveBook(Book book) {
+        return bookRepository.save(book);
+    }
+
     public void deleteBook(long bookId) throws IOException {
 
         String uploadDir = "image\\" + bookId;
@@ -54,4 +59,25 @@ public class BookService {
     public List<Book> findByAuthor(String author) {
         return bookRepository.findByAuthor(author);
     }
+
+    public List<String> getAllAuthors() {
+        return bookRepository.findAllAuthors();
+    }
+
+    public List<Book> findBooksWithDesiredStatus() {
+        return bookRepository.findBooksWithDesiredStatus();
+    }
+
+    public List<Book> findBooksWithReadingStatus() {
+        return bookRepository.findBooksWithReadingStatus();
+    }
+
+    public List<Book> findBooksWithReadedStatus() {
+        return bookRepository.findBooksWithReadedStatus();
+    }
+
+    public List<Book> findBooksWithStatus() {
+        return bookRepository.findBooksWithStatus();
+    }
+
 }

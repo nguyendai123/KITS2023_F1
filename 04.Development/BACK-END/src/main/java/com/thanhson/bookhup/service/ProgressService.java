@@ -9,16 +9,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProgressService {
 
-
     @Autowired
     private ProgressRepository progressRepository;
 
-//    public Progress saveProgress(Progress progress) {
-//        return progressRepository.save(progress);
-//    }
-//
-//    public Progress getProgressById(long id) {
-//        return progressRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Progress not found"));
-//    }
+    public Progress save(Progress progress) {
+        return progressRepository.save(progress);
+    }
+
+    public void delete(Progress progress) {
+        progressRepository.delete(progress);
+    }
+
+    public Progress getProgressById(Long progressId) {
+        return progressRepository.findById(progressId).orElse(null);
+    }
 }

@@ -32,8 +32,11 @@ public class PostService {
         return postRepository.findAllByUser_UserIDOrderByCreateDateDesc(userID);
     }
 
-    public long save(Post post){
+    public long save(Post post) {
         return postRepository.saveAndFlush(post).getPostID();
     }
 
+    public void delete(Post post) {
+        postRepository.delete(post);
+    }
 }

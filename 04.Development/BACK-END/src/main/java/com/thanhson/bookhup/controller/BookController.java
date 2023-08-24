@@ -31,7 +31,8 @@ public class BookController {
     public Optional<Book> getBookById(@PathVariable long bookId) {
         return bookService.getBookById(bookId);
     }
-    @GetMapping(value="/books/findByTitle")
+
+    @GetMapping(value = "/books/findByTitle")
     public ResponseEntity<List<Book>> getBooksByTitle(@RequestParam("title") String title) {
         List<Book> books = bookService.findByTitle(title);
         if (books.isEmpty()) {
@@ -40,6 +41,7 @@ public class BookController {
             return ResponseEntity.ok(books);
         }
     }
+
     @GetMapping("/books/findByAuthor")
     public ResponseEntity<List<Book>> findByAuthor(@RequestParam("author") String author) {
         List<Book> books = bookService.findByAuthor(author);
@@ -49,14 +51,22 @@ public class BookController {
             return ResponseEntity.ok(books);
         }
     }
+
+    @GetMapping("/books/authors")
+    public List<String> getAllAuthors() {
+        return bookService.getAllAuthors();
+    }
+
     @PostMapping(value = "/books/add", consumes = "multipart/form-data")
-    public ResponseEntity<Book> saveBook(@ModelAttribute Book book, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        Book savedBook = bookService.saveBook(book, imageFile);
+    public ResponseEntity<Book> saveBook(@ModelAttribute Book book, @RequestParam("imageFile") MultipartFile imageFile)
+            throws IOException {
+        Book savedBook = bookService.saveBookwithMultiFile(book, imageFile);
         return ResponseEntity.ok(savedBook);
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @ModelAttribute Book updatedBook, @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+    public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @ModelAttribute Book updatedBook,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
         Optional<Book> existingBookOptional = bookService.getBookById(id);
 
         if (existingBookOptional.isEmpty()) {
@@ -68,26 +78,22 @@ public class BookController {
         existingBook.setAuthor(updatedBook.getAuthor());
         existingBook.setIsbn(updatedBook.getIsbn());
         existingBook.setPage(updatedBook.getPage());
-        existingBook.setAverageRating(updatedBook.getAverageRating());
         existingBook.setSummary(updatedBook.getSummary());
 
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
-                String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-                existingBook.setImage(fileName);
-
-                String uploadDir = "image/" + existingBook.getBookID();
-                FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
+                Book updatedBookResult = bookService.saveBookwithMultiFile(existingBook, imageFile);
+                return ResponseEntity.ok(updatedBookResult);
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
-        }
-
-        try {
-            Book updatedBookResult = bookService.saveBook(existingBook, imageFile);
+        } else {
+            // Nếu imageFile không được cung cấp, truy xuất tên file hình ảnh từ cơ sở dữ
+            // liệu
+            String existingFileName = existingBook.getImage();
+            existingBook.setImage(existingFileName);
+            Book updatedBookResult = bookService.saveBook(existingBook);
             return ResponseEntity.ok(updatedBookResult);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -96,4 +102,23 @@ public class BookController {
         bookService.deleteBook(bookId);
     }
 
+    @GetMapping("/books/desired")
+    public List<Book> getBooksWithDesiredStatus() {
+        return bookService.findBooksWithDesiredStatus();
+    }
+
+    @GetMapping("/books/reading")
+    public List<Book> getBooksWithReadingStatus() {
+        return bookService.findBooksWithReadingStatus();
+    }
+
+    @GetMapping("/books/readed")
+    public List<Book> getBooksWithReadedStatus() {
+        return bookService.findBooksWithReadedStatus();
+    }
+
+    @GetMapping("/books/status")
+    public List<Book> getBooksWithStatus() {
+        return bookService.findBooksWithStatus();
+    }
 }
