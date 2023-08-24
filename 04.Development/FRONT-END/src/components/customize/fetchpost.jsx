@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from "moment";
 
-const useFetchPost = (url, dataPost) => {
-  const [data, setData] = useState([]);
+const useFetchPost = (url, data) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -12,19 +11,9 @@ const useFetchPost = (url, dataPost) => {
 
     async function fetchData() {
       try {
-        let res = await axios.post(
-          url,
-          { dataPost },
-          {
-            cancelToken: ourRequest.token, // <-- 2nd step
-          }
-        );
-
-        let data = res && res.data ? res.data : []; // true, false
-
-        setData(data);
-        setIsLoading(false);
-        setIsError(false);
+        await axios.post(url, data, {
+          cancelToken: ourRequest.token, // <-- 2nd step
+        });
       } catch (err) {
         if (axios.isCancel(err)) {
           console.log("Request canceled", err.message);
@@ -42,7 +31,7 @@ const useFetchPost = (url, dataPost) => {
     return () => {
       ourRequest.cancel("Operation canceled by the user."); // <-- 3rd step
     };
-  }, [url]);
+  }, [data]);
 
   return {
     data,

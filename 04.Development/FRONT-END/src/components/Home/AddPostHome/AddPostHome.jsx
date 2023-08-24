@@ -1,7 +1,10 @@
 import "./AddPostHome.css";
 import { Button, Dropdown, Modal, Space, Popover, ConfigProvider } from "antd";
 import { Input } from "antd";
+import useFetchPost from "../../customize/fetchpost";
+import useFetch from "../../customize/fetch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Carousel from "react-elastic-carousel";
 import {
   faCoffee,
   faLock,
@@ -9,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 const { TextArea } = Input;
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import AccountHeader from "../../AccountHeader/AccountHeader";
 const items = [
   {
@@ -18,26 +21,59 @@ const items = [
     icon: <FontAwesomeIcon icon={faLock} />,
   },
 ];
+const breakPoints = [
+  { width: 1, itemsToShow: 3 },
+  { width: 550, itemsToShow: 3, itemsToScroll: 3 },
+  { width: 768, itemsToShow: 3 },
+  { width: 1200, itemsToShow: 3 },
+];
 
 const AddPostHome = () => {
   const [open, setOpen] = useState(false);
+  const [openAddBook, setOpenAddBook] = useState(false);
   const [value, setValue] = useState("");
-  async function getNewPosts() {
-    const response = await fetch("http://localhost:8080/api/posts/create/2", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  const [titleModel, setTitleModel] = useState("Create Post");
+  const {
+    data: dataBooks,
+    isLoadingBooks,
+    isErrorBooks,
+  } = useFetch("http://localhost:8080/api/books", false);
+  console.log("dataBooks", dataBooks, isLoadingBooks, isErrorBooks);
+  const onClickAddBookPost = () => {
+    setOpen(false);
+    setOpenAddBook(true);
+    return dataBooks;
+  };
+
+  const url = "http://localhost:8080/api/posts/create/2";
+  const {
+    data: dataPosts,
+    isLoading,
+    isError,
+  } = () =>
+    useFetchPost(url, {
+      content: "Nguyen van dai 123456789101019",
+      book: {
+        bookID: 1,
       },
-      body: JSON.stringify({
-        content: "Nguyen van dai 123456",
-        book: {
-          bookID: 2,
-        },
-      }),
     });
-    const data = await response.json();
-    console.log(data);
-  }
+  console.log("posts1111", dataPosts);
+  // async function getNewPosts() {
+  //   const response = await fetch("http://localhost:8080/api/posts/create/2", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       content: "Nguyen van dai 123456",
+  //       book: {
+  //         bookID: 2,
+  //       },
+  //     }),
+  //   });
+  //   const data = await response.json();
+  //   console.log(data);
+  // }
   return (
     <div className="home-add-newpost bg-white p-3 mt-3 rounded border shadow mb-3">
       {/* avatar */}
@@ -79,6 +115,8 @@ const AddPostHome = () => {
           width={600}
           height={420}
           footer={null}
+          onOk={() => setOpen(false)}
+          onCancel={() => setOpen(false)}
         >
           <hr style={{ color: "#9197a3" }} />
           <div className="home-create-post-model-content">
@@ -138,6 +176,7 @@ const AddPostHome = () => {
                     overlayStyle={{ maxWidth: "140px" }}
                     trigger="hover"
                     content={"Books (Required)"}
+                    onClick={() => onClickAddBookPost()}
                   >
                     <div className="add-post-book">
                       <svg
@@ -228,10 +267,98 @@ const AddPostHome = () => {
             <div className="model-content-submit">
               <Button
                 className="model-content-btn-submit"
-                onClick={getNewPosts}
+                // onClick={getNewPosts}
                 block
               >
                 Post
+              </Button>
+            </div>
+          </div>
+        </Modal>
+        <Modal
+          title={
+            <Space
+              direction="horizontal"
+              style={{ width: "100%", justifyContent: "center" }}
+            >
+              Add books to posts
+            </Space>
+          }
+          centered
+          open={openAddBook}
+          width={700}
+          height={420}
+          footer={null}
+          onOk={() => setOpenAddBook(false)}
+          onCancel={() => setOpenAddBook(false)}
+        >
+          <hr style={{ color: "#9197a3" }} />
+          <Space.Compact
+            style={{
+              width: "100%",
+            }}
+          >
+            <Input defaultValue="Combine input and button" />
+            <Button type="primary">Submit</Button>
+          </Space.Compact>
+
+          <hr style={{ color: "#9197a3" }} />
+          <div className="model-content-active">
+            <div>
+              <div className="model-content-title">
+                suggest
+                <span style={{ color: "red" }}>*</span>
+              </div>
+
+              {/* isError === false && isLoading === false && data && data.length > 0 */}
+              {!isLoadingBooks &&
+                !isErrorBooks &&
+                dataBooks &&
+                dataBooks.length > 0 && (
+                  // <Space
+                  //   style={{ display: "flex", justifyContent: "space-around" }}
+                  //   size={30}
+                  // >
+                  <Carousel itemsToShow={3} pagination={false}>
+                    {dataBooks.map((item) => (
+                      <div style={{ margin: "0 5px" }} key={item.bookID}>
+                        <img
+                          style={{
+                            width: "140px",
+                            height: "200px",
+                            borderRadius: "10px",
+                          }}
+                          src={item.image}
+                          alt="imageBook1"
+                        />
+                      </div>
+                    ))}
+                  </Carousel>
+                  /* <img
+                      style={{ width: "150px", height: "250px" }}
+                      src={dataBooks[0].image}
+                      alt="imageBook1"
+                    />
+                    <img
+                      style={{ width: "150px", height: "250px" }}
+                      src={dataBooks[1].image}
+                      alt="imageBook1"
+                    />
+                    <img
+                      style={{ width: "150px", height: "250px" }}
+                      src={dataBooks[0].image}
+                      alt="imageBook2"
+                    /> */
+                  // </Space>
+                )}
+            </div>
+            <div className="model-content-submit">
+              <Button
+                className="model-content-btn-submit"
+                // onClick={getNewPosts}
+                block
+              >
+                Done
               </Button>
             </div>
           </div>

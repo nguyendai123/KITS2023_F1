@@ -208,11 +208,7 @@ function PostCard({ data, isError, isLoading }) {
               >
                 <div className="like-post">
                   <div className="">
-                    <img
-                      src={likeicon}
-                      alt="like"
-                      onClick={() => useFetchPost("")}
-                    />
+                    <img src={likeicon} alt="like" />
                     <img src={loveicon} alt="love" />
                     <img
                       className="x1b0d499 xl1xv1r"
