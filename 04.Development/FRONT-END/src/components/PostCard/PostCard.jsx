@@ -182,7 +182,8 @@ function PostCard({ data, isError, isLoading }) {
                     >
                       <Rate
                         allowHalf
-                        defaultValue={data[0].book.averageRating}
+                        // defaultValue={data[0].book.averageRating}
+                        defaultValue={4}
                         disabled
                       />
                       <div

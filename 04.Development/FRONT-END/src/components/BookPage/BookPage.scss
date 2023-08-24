@@ -5,11 +5,12 @@
 }
 
 .book-page-bg-container {
+
     flex-direction  : row;
     background-color: rgb(237, 237, 242);
     flex-grow       : grow;
-
-    padding: 35px;
+    margin          : 0 200px;
+    padding         : 35px;
 }
 
 .book-top-rated-container {
@@ -24,6 +25,7 @@
 }
 
 .top-rated-heading-container {
+
     display        : flex;
     flex-direction : row;
     justify-content: space-between;
@@ -52,15 +54,17 @@
     }
 }
 
+.top-rated-book-item-container {}
+
 .top-rated-book-image {
-    height: 30vh;
-    width : 20vw;
+    height: 340px;
+    width : 240px;
 }
 
 @media screen and (max-width: 787px) {
     .top-rated-book-image {
-        max-height : 20vh;
-        width      : 25vw;
+        max-height : 400px;
+        width      : 240px;
         margin-top : 5px;
         align-items: center;
     }
@@ -92,4 +96,8 @@
     color           : white;
     padding         : 5px;
     border-radius   : 5px;
+}
+
+.slick-container {
+    margin-left: 30px;
 }

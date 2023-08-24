@@ -40,14 +40,7 @@ const items = [
     ),
     key: "genres",
   },
-  {
-    label: (
-      <Link className="link" to="/favorites">
-        MyFavorites
-      </Link>
-    ),
-    key: "favorites",
-  },
+
   {
     label: (
       <Link className="link" to="/authors">
@@ -116,7 +109,7 @@ const Header = () => {
           placeholder="input search text"
           allowClear
           enterButton="Search"
-          style={{ maxWidth: "350px" }}
+          style={{ maxWidth: "450px" }}
         />
 
         <Menu
@@ -162,9 +155,6 @@ const Header = () => {
               </Link>
               <Link className="link" to="/shelf">
                 <h1 className={`bookshelves-tab`}>BookShelves</h1>
-              </Link>
-              <Link className="link" to="/favorites">
-                <h1 className={`bookshelves-tab`}>MyFavorites</h1>
               </Link>
             </div>
             <div className="header-navbar-tabs-container">
