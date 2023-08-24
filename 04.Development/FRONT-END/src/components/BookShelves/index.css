@@ -7,7 +7,7 @@
   }
 }
 .bookshelves-heading-bookshelves-heading-lg {
-  font-family: 'inter';
+  font-family: "inter";
   font-size: 20px;
   font-weight: 500;
 }
@@ -15,7 +15,7 @@
   .book-shelves-filter-container {
     background-color: aliceblue;
     border-radius: 10px;
-    margin-left: 35px;
+    margin: 0 30px 0 35px;
     padding: 15px;
     width: 25vw;
     list-style-type: none;
@@ -84,7 +84,7 @@
   .filtered-books-search-input-container-lg {
     justify-content: space-between;
     padding: 10px;
-    width: 550px;
+    width: 100%;
     font-family: inter;
     font-weight: 700;
     font-size: 10px;
@@ -105,6 +105,10 @@
   height: 31px;
   width: 30px;
 }
+/* .large-container {
+  display: flex;
+  flex-direction: column;
+} */
 @media screen and (min-width: 787px) {
   .large-container {
     display: flex;
@@ -115,15 +119,19 @@
 .bookList-container {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  width: 600px;
   justify-content: space-between;
+  gap: 29px;
 }
 .loader-container {
   display: flex;
   flex-direction: column;
 
   align-items: center;
+}
+.search-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 @media screen and (max-width: 786px) {
   .search-input-container {
@@ -160,4 +168,7 @@
   height: 40vh;
   width: 40vw;
   border-radius: 15px;
+}
+.renderbookshelves {
+  margin-top: 20px;
 }

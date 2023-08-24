@@ -127,7 +127,7 @@ const Home = () => {
     const options = {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer`,
       },
     };
     const response = await fetch(topRatedBooksApi, options);

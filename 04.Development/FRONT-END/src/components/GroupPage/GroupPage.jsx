@@ -8,9 +8,10 @@ import GroupItemJoined from "./GroupItemJoined/GroupItemJoined";
 import Footer from "../Footer/Footer";
 import { Button, List, Card } from "antd";
 import GroupItemSuggest from "./GroupItemSuggest/GroupItemSuggest";
+
 const todos = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-  23, 24, 25, 26, 27, 28, 29, 30, 31,
+  23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
 ];
 const { Meta } = Card;
 const { Search } = Input;
@@ -40,7 +41,9 @@ const GroupPage = () => {
               alt="retry"
             />
           </button>
-          <div className="group-title">Group</div>
+          <div className="group-title">
+            <b>Group</b>
+          </div>
         </Space>
         <div
           style={{
@@ -66,7 +69,9 @@ const GroupPage = () => {
         </div>
         <div className="group-body">
           <div className="group-body-left">
-            <div>Group you joined</div>
+            <div>
+              <b>Group you joined</b>
+            </div>
             <GroupItemJoined />
             <GroupItemJoined />
             <GroupItemJoined />
@@ -74,9 +79,12 @@ const GroupPage = () => {
             <GroupItemJoined />
           </div>
           <div className="group-body-right">
-            <div>Gợi ý nhóm</div>
+            <div>
+              <b>Group suggestion</b>
+            </div>
 
             <List
+              itemLayout="vertical"
               grid={{
                 gutter: 16,
                 xs: 1,
@@ -87,8 +95,11 @@ const GroupPage = () => {
                 xxl: 4,
               }}
               pagination={{
+                position: "bottom",
+                align: "center",
                 showSizeChanger: true,
-                pageSizeOptions: ["10", "20", "30", "1000"],
+                pageSizeOptions: ["16", "24", "32", "64"],
+                defaultPageSize: "16",
                 position: "both",
               }}
               dataSource={todos}
@@ -117,9 +128,9 @@ const GroupPage = () => {
                     <div className="card-des-group">
                       <div className="group-name">Nghiện Đọc và Viết</div>
                       <div className="number-member-group">
-                        <div>21 thành viên</div>
+                        <div>21 Member</div>
 
-                        <div>0 bài viết/ngày</div>
+                        <div>0 post/date</div>
                       </div>
 
                       <Button
@@ -128,7 +139,7 @@ const GroupPage = () => {
                         shape="round"
                         size="large"
                       >
-                        Truy cập nhóm
+                        Join group
                       </Button>
                     </div>
                   </Card>
