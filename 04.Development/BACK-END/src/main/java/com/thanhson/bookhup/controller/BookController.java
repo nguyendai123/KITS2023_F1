@@ -55,7 +55,7 @@ public class BookController {
     }
     @PostMapping(value = "/books/add", consumes = "multipart/form-data")
     public ResponseEntity<Book> saveBook(@ModelAttribute Book book, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        Book savedBook = bookService.saveBook(book, imageFile);
+        Book savedBook = bookService.saveBookwithMultiFile(book, imageFile);
         return ResponseEntity.ok(savedBook);
     }
 
@@ -76,21 +76,17 @@ public class BookController {
 
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
-                String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-                existingBook.setImage(fileName);
-
-                String uploadDir = "image/" + existingBook.getBookID();
-                FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
+                Book updatedBookResult = bookService.saveBookwithMultiFile(existingBook, imageFile);
+                return ResponseEntity.ok(updatedBookResult);
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
-        }
-
-        try {
-            Book updatedBookResult = bookService.saveBook(existingBook, imageFile);
+        }else {
+            // Nếu imageFile không được cung cấp, truy xuất tên file hình ảnh từ cơ sở dữ liệu
+            String existingFileName = existingBook.getImage();
+            existingBook.setImage(existingFileName);
+            Book updatedBookResult = bookService.saveBook(existingBook);
             return ResponseEntity.ok(updatedBookResult);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

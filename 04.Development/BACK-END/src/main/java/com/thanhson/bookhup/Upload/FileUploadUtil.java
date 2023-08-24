@@ -32,7 +32,7 @@ public class FileUploadUtil {
 
     public static void deleteFile(String uploadDir) throws IOException {
 
-        File folder = new File("D:\\KITS2022\\BigProject\\Bigproject\\KITS2023_F1\\04.Development\\BACK-END\\" + uploadDir);
+        File folder = new File("D:\\HocTapTLU\\BIGPROJECT\\KITS2023_G1\\04.Development\\BACK-END\\" + uploadDir);
         deleteRecursive(folder);
     }
 

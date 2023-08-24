@@ -28,7 +28,7 @@ public class BookService {
     public List<Book> findByTitle(String title) {
         return bookRepository.findByTitle(title);
     }
-    public Book saveBook(Book book, MultipartFile imageFile) throws IOException {
+    public Book saveBookwithMultiFile(Book book, MultipartFile imageFile) throws IOException {
         String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
         book.setImage(fileName);
 
@@ -41,6 +41,9 @@ public class BookService {
         // Save the book to your data store
 
         return savedBook;
+    }
+    public Book saveBook(Book book){
+        return bookRepository.save(book);
     }
 
     public void deleteBook(long bookId) throws IOException {
