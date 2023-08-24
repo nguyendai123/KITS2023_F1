@@ -285,8 +285,6 @@ const Home = () => {
             </div>
             <div className="home-rating-book">
               <RatingBookItem />
-              <RatingBookItem />
-              <RatingBookItem />
             </div>
             {/* <div className="slick-container">{renderSlider()}</div> */}
           </div>
