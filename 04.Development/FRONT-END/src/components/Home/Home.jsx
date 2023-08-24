@@ -1,22 +1,81 @@
-import Cookies from 'js-cookie'
-import Slider from 'react-slick'
-import { redirect } from 'react-router-dom'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
+import Cookies from "js-cookie";
+import Slider from "react-slick";
+import { useNavigate } from "react-router-dom";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { TailSpin } from "react-loader-spinner";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
+import { Input } from "antd";
+import "./Home.css";
+import { useEffect, useState } from "react";
+import PostCard from "../PostCard/PostCard";
+import RatingBookItem from "../RatingBookItem/RatingBookItem";
+import AddPostHome from "./AddPostHome/AddPostHome";
+import useFetch from "../customize/fetch";
+import axios from "axios";
+const text = `
+  A dog is a type of domesticated animal.
+  Known for its loyalty and faithfulness,
+  it can be found as a welcome guest in many households across the world.
+`;
 
-import Header from '../Header/Header'
-import Footer from '../Footer/Footer'
-import * as Loader from "react-loader-spinner";
+const items_comments = [
+  {
+    key: "1",
 
-import './Home.scss'
-import { useEffect, useState } from 'react'
-
+    children: <p>{text}</p>,
+  },
+];
+const items = [
+  {
+    label: (
+      <a
+        className="
+    dropdown-item
+    d-flex
+    justify-content-around
+    align-items-center
+    fs-7
+  "
+        href="#"
+      >
+        Edit Post
+      </a>
+    ),
+    key: "0",
+  },
+  {
+    label: (
+      <a
+        className="
+    dropdown-item
+    d-flex
+    justify-content-around
+    align-items-center
+    fs-7
+  "
+        href="#"
+      >
+        Delete Post
+      </a>
+    ),
+    key: "1",
+  },
+  {
+    type: "divider",
+  },
+  {
+    label: "3rd menu item",
+    key: "3",
+  },
+];
 const topRatedApiStatuses = {
-  initial: 'INITIAL',
-  success: 'SUCCESS',
-  failure: 'FAILURE',
-  inProgress: 'IN_PROGRESS',
-}
+  initial: "INITIAL",
+  success: "SUCCESS",
+  failure: "FAILURE",
+  inProgress: "IN_PROGRESS",
+};
 
 const settings = {
   dots: false,
@@ -40,96 +99,103 @@ const settings = {
       },
     },
   ],
-}
+};
 
-const Home = ()=> {
-  const[topRatedApiStatus,setTopRatedApiStatus]= useState(topRatedApiStatuses.initial); 
-  const[topRatedBooks, setTopRatedBooks] = useState([]);
-  useEffect(()=>{
+const Home = () => {
+  const [topRatedApiStatus, setTopRatedApiStatus] = useState(
+    topRatedApiStatuses.initial
+  );
+  const [openComment, setOpenComment] = useState(false);
+  const [topRatedBooks, setTopRatedBooks] = useState([]);
+  const {
+    data: dataPosts,
+    isLoading,
+    isError,
+  } = useFetch("http://localhost:8080/api/posts", false);
+  console.log("posts", dataPosts);
+
+  let navigate = useNavigate();
+  useEffect(() => {
     getTopRatedBooks();
-  },[])
-    
+  }, []);
 
   const getTopRatedBooks = async () => {
-    setTopRatedApiStatus(topRatedApiStatuses.inProgress)
+    setTopRatedApiStatus(topRatedApiStatuses.inProgress);
 
-    const topRatedBooksApi = 'https://apis.ccbp.in/book-hub/top-rated-books'
-    const jwtToken = Cookies.get('jwt_token')
+    const topRatedBooksApi = "http://localhost:8080/api/books";
+    const jwtToken = Cookies.get("jwt_token");
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
         Authorization: `Bearer ${jwtToken}`,
       },
-    }
-    const response = await fetch(topRatedBooksApi, options)
+    };
+    const response = await fetch(topRatedBooksApi, options);
     if (response.ok === true) {
-      const fetchedData = await response.json()
-      const booksList = fetchedData.books
-      const updatedData = booksList.map(eachBook => ({
-        id: eachBook.id,
-        authorName: eachBook.author_name,
-        coverPic: eachBook.cover_pic,
-        title: eachBook.title,
-      }))
-      setTopRatedApiStatus(topRatedApiStatuses.success)
-        setTopRatedBooks(updatedData)
-      
+      const fetchedData = await response.json();
+      console.log("ldll", fetchedData);
+      const booksList = fetchedData.books;
+      // const updatedData = booksList.map((eachBook) => ({
+      //   id: eachBook.id,
+      //   authorName: eachBook.author_name,
+      //   coverPic: eachBook.cover_pic,
+      //   title: eachBook.title,
+      // }));
+      setTopRatedApiStatus(topRatedApiStatuses.success);
+      // setTopRatedBooks(updatedData);
     } else {
-      setTopRatedApiStatus(topRatedApiStatuses.failure)
+      setTopRatedApiStatus(topRatedApiStatuses.failure);
     }
-  }
+  };
 
   const onClickRetry = () => {
-    getTopRatedBooks()
-  }
+    getTopRatedBooks();
+  };
 
   const onClickFindBooks = () => {
-    
-    return redirect('/shelf');
-  }
+    return navigate("/shelf");
+  };
 
-  const renderSliderSuccessView = () => {
-   
+  const RenderSliderSuccessView = () => {
     return (
       <Slider {...settings}>
-        {topRatedBooks.map(eachBook => {
-          const {id, title, coverPic, authorName} = eachBook
+        {topRatedBooks.map((eachBook) => {
+          const { id, title, coverPic, authorName } = eachBook;
           const onClickedTopRatedBook = () => {
-           
-             redirect(`/books/${id}`);
-          }
+            navigate(`/books/${id}`);
+          };
 
           return (
-            <div className="top-rated-book-item-container" key={id}>
+            <div className="top-rated-home-item-container" key={id}>
               <button
                 onClick={onClickedTopRatedBook}
                 className="top-rated-card-btn"
                 type="button"
               >
-                <div className="top-rated-book-image-container">
+                <div className="top-rated-home-image-container">
                   <img
-                    className="top-rated-book-image"
+                    className="top-rated-home-image"
                     src={coverPic}
                     alt={title}
                   />
                 </div>
-                <h1 className="top-rated-book-name">{title}</h1>
-                <p className="top-rated-book-author">{authorName}</p>
+                <h1 className="top-rated-home-name">{title}</h1>
+                <p className="top-rated-home-author">{authorName}</p>
               </button>
             </div>
-          )
+          );
         })}
       </Slider>
-    )
-  }
+    );
+  };
 
-  const renderSliderProgressView = () => (
+  const RenderSliderProgressView = () => (
     <div className="loader-container">
-      <Loader type="TailSpin" color="#8284C7" height={50} width={50} />
+      <TailSpin color="#8284C7" height={50} width={50} />;
     </div>
-  )
+  );
 
-  const renderSliderViewFailure = () => (
+  const RenderSliderViewFailure = () => (
     <div className="top-rated-books-failure-container">
       <img
         className="top-rated-books-failure-image"
@@ -142,34 +208,46 @@ const Home = ()=> {
       </p>
       <button
         className="top-rated-books-failure-btn"
-        onClick={()=>onClickRetry()}
+        onClick={() => onClickRetry()}
         type="button"
       >
         Try Again
       </button>
     </div>
-  )
-
+  );
   const renderSlider = () => {
-    
-
     switch (topRatedApiStatus) {
       case topRatedApiStatuses.success:
-        return <>{renderSliderSuccessView()}</>
+        return (
+          <>
+            <RenderSliderSuccessView />
+          </>
+        );
       case topRatedApiStatuses.inProgress:
-        return <>{()=>renderSliderProgressView()}</>
+        return (
+          <>
+            <RenderSliderProgressView />
+          </>
+        );
       case topRatedApiStatuses.failure:
-        return <> {renderSliderViewFailure()}</>
+        return (
+          <>
+            <RenderSliderViewFailure />
+          </>
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
+  const handleClickComment = () => {
+    setOpenComment(!openComment);
+  };
 
-
-    return (
-      <>
-        <Header page = "home" />
-        <div className="home-page-bg-container">
+  return (
+    <>
+      <Header />
+      <div className="home-page-container">
+        <div className="home-page-left-container">
           <h1 className="home-heading" key="title">
             Find Your Next Favorite Books?
           </h1>
@@ -178,33 +256,46 @@ const Home = ()=> {
             enjoyed in the past, and we will give you surprisingly insightful
             recommendations.
           </p>
-          <button
-            className="home-find-books-btn books-responsive-btn-sm"
-            type="button"
-            onClick={onClickFindBooks}
-          >
-            Find Books
-          </button>
+          {/* <Input
+            style={{ margin: "10px 0" }}
+            type="text"
+            className="input-home"
+            placeholder="Tạo bài viết của bạn"
+            onClick={renderNewPost}
+          /> */}
+          <AddPostHome />
+          {/* p 1 */}
           <div>
-            <div className="home-top-rated-container">
-              <div className="top-rated-heading-container">
-                <h1 className="top-rated-heading">Top Rated Books</h1>
-                <button
-                  className="home-find-books-btn books-responsive-btn-lg"
-                  type="button"
-                  onClick={onClickFindBooks}
-                >
-                  Find Books
-                </button>
-              </div>
-              <div className="slick-container">{()=>renderSlider()}</div>
-            </div>
+            <PostCard
+              data={dataPosts}
+              isError={isError}
+              isLoading={isLoading}
+            />
+            <PostCard
+              data={dataPosts}
+              isError={isError}
+              isLoading={isLoading}
+            />
           </div>
         </div>
-        <Footer />
-      </>
-    )
-  
-}
+        <div className="home-page-right-container">
+          <div className="home-top-rated-container">
+            <div className="top-rated-heading-container">
+              <h1 className="top-rated-heading">Top Rated Books</h1>
+            </div>
+            <div className="home-rating-book">
+              <RatingBookItem />
+              <RatingBookItem />
+              <RatingBookItem />
+            </div>
+            {/* <div className="slick-container">{renderSlider()}</div> */}
+          </div>
+        </div>
+      </div>
 
-export default Home
+      <Footer />
+    </>
+  );
+};
+
+export default Home;

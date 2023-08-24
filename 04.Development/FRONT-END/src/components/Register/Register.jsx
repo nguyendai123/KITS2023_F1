@@ -3,20 +3,15 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 import { useState } from "react";
-import "./Login.scss";
-const Login = () => {
+import "./Register.css";
+const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [showSubmitError, setShowSubmitError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   let navigate = useNavigate();
-  const onClickRegister = () => {
-    //return <Redirect to="register" />;
-    return navigate("register");
-  };
   const onSubmitSuccuss = (jwtToken) => {
-    console.log("xutaa", jwtToken);
-
     return navigate("/");
   };
 
@@ -27,26 +22,6 @@ const Login = () => {
 
   const onSubmitForm = async (event) => {
     event.preventDefault();
-    const userDetails = { username, password };
-    const apiUrl = "http://localhost:8080/api/auth/login";
-    const options = {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer`,
-      }),
-      body: JSON.stringify(userDetails),
-    };
-    const response = await fetch(apiUrl, options);
-
-    const data = await response.json();
-    console.log(data);
-    if (response.ok === true) {
-      Cookies.set("jwt_token", data.accessToken, { expires: 30, path: "/" });
-      onSubmitSuccuss(data.accessToken);
-    } else {
-      onSubmitFailure(data.error_msg);
-    }
   };
 
   const onChangePassword = (event) => {
@@ -56,34 +31,34 @@ const Login = () => {
   const onChangeUsername = (event) => {
     setUsername(event.target.value);
   };
-  const jwtToken = Cookies.get("jwt_token");
-  if (jwtToken !== undefined) {
+  const handleCancelClick = () => {
     return navigate("/");
-  }
+  };
   return (
-    <div className="login-page">
+    <div className="register-page">
       <div
         style={{
           backgroundImage: `url(${bg})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
         }}
-        className="login-form-container"
+        className="register-form-container"
       >
-        <div className="left-content-login">
+        <div className="left-content-register">
           <img
             src="https://res.cloudinary.com/dwtsapuyn/image/upload/v1645077666/book-hub-logo_dy4szt.png"
             alt="website logo"
-            className="login-website-logo-desktop-image"
+            className="register-website-logo-desktop-image"
           />
-          <div className="bookhub-des-login">
+          <div className="bookhub-des-lregister">
             BookHub helps people share books, join discussions, discover new
             books, and connect with readers.
           </div>
         </div>
 
         <div className="form-main-container">
-          <form className="form-container" onSubmit={onSubmitForm}>
+          <form className="form-container-register" onSubmit={onSubmitForm}>
+            <div>Sign Up</div>
             <div className="input-container">
               <>
                 <label className="input-label" htmlFor="username">
@@ -117,21 +92,28 @@ const Login = () => {
               </>
               {showSubmitError && <p className="error-message">{errorMsg}</p>}
             </div>
-            <button type="submit" className="login-button">
-              Login
-            </button>
-
-            {showSubmitError && <p className="error-message">{errorMsg}</p>}
-            <a href="#" className="forgot-pw">
-              Forgot password
-            </a>
-            <div className="space-login"></div>
-            <button
-              className="register-button"
-              onClick={() => navigate("/register")}
-            >
-              Register
-            </button>
+            <div className="input-container">
+              <>
+                <label className="input-label" htmlFor="password">
+                  Email<span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  id="email"
+                  className="input-field"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => onChangeEmail(e)}
+                />
+              </>
+              {showSubmitError && <p className="error-message">{errorMsg}</p>}
+            </div>
+            <div className="Signup-btn">
+              <button className="register-button" onClick={handleCancelClick}>
+                Cancel
+              </button>
+              <button className="register-button">Register</button>
+            </div>
           </form>
         </div>
       </div>
@@ -140,9 +122,9 @@ const Login = () => {
           <div>English (UK)</div>
           <div>Tiếng Việt</div>
         </div>
-        <div>Copyright @ 2023 by F1</div>
+        <div>Copyright @ 2023</div>
       </div>
     </div>
   );
 };
-export default Login;
+export default Register;
