@@ -5,6 +5,7 @@ import useFetchPost from "../../customize/fetchpost";
 import useFetch from "../../customize/fetch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Carousel from "react-elastic-carousel";
+import axios from "axios";
 import {
   faCoffee,
   faLock,
@@ -14,6 +15,7 @@ const { TextArea } = Input;
 
 import { useState, useMemo } from "react";
 import AccountHeader from "../../AccountHeader/AccountHeader";
+import { useEffect } from "react";
 const items = [
   {
     label: <a href="#">Private</a>,
@@ -28,9 +30,10 @@ const breakPoints = [
   { width: 1200, itemsToShow: 3 },
 ];
 
-const AddPostHome = () => {
+const AddPostHome = ({ setLoad }) => {
   const [open, setOpen] = useState(false);
   const [openAddBook, setOpenAddBook] = useState(false);
+  const [add, setAdd] = useState(false);
   const [value, setValue] = useState("");
   const [titleModel, setTitleModel] = useState("Create Post");
   const {
@@ -45,18 +48,41 @@ const AddPostHome = () => {
     return dataBooks;
   };
 
-  const url = "http://localhost:8080/api/posts/create/2";
+  const url = "http://localhost:8080/api/posts/create/1";
   const {
     data: dataPosts,
     isLoading,
     isError,
-  } = () =>
-    useFetchPost(url, {
-      content: "Nguyen van dai 123456789101019",
-      book: {
-        bookID: 1,
-      },
-    });
+  } = useFetchPost(url, {
+    content: "Nguyen van dai 12345678910101966",
+    book: {
+      bookID: 1,
+    },
+  });
+
+  const handleDone = () => {
+    const fetchData = async () => {
+      try {
+        const url = "http://localhost:8080/api/posts/create/1"; // Replace with your API endpoint
+        const payload = {
+          content: "Nguyen van dai 1232000000",
+          book: {
+            bookID: 1,
+          },
+        };
+
+        const response = await axios.post(url, payload);
+        const data = response.data;
+        console.log("posts dai api", data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    // Call the fetchData function wherever needed
+    fetchData();
+    setLoad(true);
+  };
   console.log("posts1111", dataPosts);
   // async function getNewPosts() {
   //   const response = await fetch("http://localhost:8080/api/posts/create/2", {
@@ -355,8 +381,7 @@ const AddPostHome = () => {
             <div className="model-content-submit">
               <Button
                 className="model-content-btn-submit"
-                // onClick={getNewPosts}
-                block
+                onClick={() => handleDone()}
               >
                 Done
               </Button>

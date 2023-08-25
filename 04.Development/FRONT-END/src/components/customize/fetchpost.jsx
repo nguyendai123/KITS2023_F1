@@ -31,7 +31,7 @@ const useFetchPost = (url, data) => {
     return () => {
       ourRequest.cancel("Operation canceled by the user."); // <-- 3rd step
     };
-  }, [data]);
+  }, [url, data]);
 
   return {
     data,

@@ -107,12 +107,31 @@ const Home = () => {
   );
   const [openComment, setOpenComment] = useState(false);
   const [topRatedBooks, setTopRatedBooks] = useState([]);
-  const {
-    data: dataPosts,
-    isLoading,
-    isError,
-  } = useFetch("http://localhost:8080/api/posts", false);
-  console.log("posts", dataPosts);
+  const [data, setData] = useState([]);
+  const [load, setLoad] = useState(false);
+  // const {
+  //   data: dataPosts,
+  //   isLoading,
+  //   isError,
+  // } = useFetch("http://localhost:8080/api/posts", false);
+  // setData(dataPosts);
+  // console.log("posts888", dataPosts);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const url = "http://localhost:8080/api/posts"; // Replace with your API endpoint
+        let res = await axios.get(url);
+
+        let data1 = res && res.data ? res.data : [];
+        setData(data1);
+        console.log("Fetched data:", data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
+  }, [load]);
 
   let navigate = useNavigate();
   useEffect(() => {
@@ -263,19 +282,11 @@ const Home = () => {
             placeholder="Tạo bài viết của bạn"
             onClick={renderNewPost}
           /> */}
-          <AddPostHome />
+          <AddPostHome setLoad={setLoad} />
           {/* p 1 */}
           <div>
-            <PostCard
-              data={dataPosts}
-              isError={isError}
-              isLoading={isLoading}
-            />
-            <PostCard
-              data={dataPosts}
-              isError={isError}
-              isLoading={isLoading}
-            />
+            <PostCard data={data} />
+            <PostCard data={data} />
           </div>
         </div>
         <div className="home-page-right-container">
