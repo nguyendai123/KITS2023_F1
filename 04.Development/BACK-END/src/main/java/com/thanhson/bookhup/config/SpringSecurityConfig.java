@@ -55,9 +55,9 @@ public class SpringSecurityConfig {
                     authorize.anyRequest().authenticated();
                 });
 
-//        http.authenticationProvider(authenticationProvider());
-//
-//        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.authenticationProvider(authenticationProvider());
+
+        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
