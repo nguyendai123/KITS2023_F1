@@ -124,7 +124,24 @@ const Home = () => {
 
         let data1 = res && res.data ? res.data : [];
         setData(data1);
-        console.log("Fetched data:", data);
+        console.log("Fetched data 123:", data1);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const url = "http://localhost:8080/api/posts"; // Replace with your API endpoint
+        let res = await axios.get(url);
+
+        let data1 = res && res.data ? res.data : [];
+        setData(data1);
+        console.log("Fetched data:", data1);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -282,11 +299,10 @@ const Home = () => {
             placeholder="Tạo bài viết của bạn"
             onClick={renderNewPost}
           /> */}
-          <AddPostHome setLoad={setLoad} />
+          <AddPostHome load={load} setLoad={setLoad} />
           {/* p 1 */}
           <div>
-            <PostCard data={data} />
-            <PostCard data={data} />
+            <PostCard data={data} load={load} setLoad={setLoad} />
           </div>
         </div>
         <div className="home-page-right-container">

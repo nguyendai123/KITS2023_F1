@@ -213,21 +213,26 @@
   margin: 0;
 }
 .comment-des-body {
-  margin: 0;
+  margin: 10px 0;
   font-size: 14px;
   background-color: #f0f2f5;
   padding: 0.5rem;
-  border-radius: 5px;
+  border-radius: 20px;
+  display: inline-block;
 }
 .comment-author-add {
+  margin-top: 20px;
   display: flex;
+  align-item: center;
+  gap: 0.5rem;
 }
 .comment-input-add {
   background-color: #f0f2f5;
   border-radius: 16px;
   border: 0;
   padding: 10px 10px;
-  width: 450px;
+  width: 100%;
+  height: 100%;
   text-decoration: none;
   display: inline-block;
   margin: 4px 2px;

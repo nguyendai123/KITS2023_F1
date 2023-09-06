@@ -30,12 +30,13 @@ const breakPoints = [
   { width: 1200, itemsToShow: 3 },
 ];
 
-const AddPostHome = ({ setLoad }) => {
+const AddPostHome = ({ load, setLoad }) => {
   const [open, setOpen] = useState(false);
   const [openAddBook, setOpenAddBook] = useState(false);
   const [add, setAdd] = useState(false);
   const [value, setValue] = useState("");
   const [titleModel, setTitleModel] = useState("Create Post");
+  const [idBook, setIdBook] = useState();
   const {
     data: dataBooks,
     isLoadingBooks,
@@ -48,26 +49,17 @@ const AddPostHome = ({ setLoad }) => {
     return dataBooks;
   };
 
-  const url = "http://localhost:8080/api/posts/create/1";
-  const {
-    data: dataPosts,
-    isLoading,
-    isError,
-  } = useFetchPost(url, {
-    content: "Nguyen van dai 12345678910101966",
-    book: {
-      bookID: 1,
-    },
-  });
-
+  const handleClickAddBook = (id) => {
+    setIdBook(id);
+  };
   const handleDone = () => {
     const fetchData = async () => {
       try {
-        const url = "http://localhost:8080/api/posts/create/1"; // Replace with your API endpoint
+        const url = "http://localhost:8080/api/posts/create/2"; // Replace with your API endpoint
         const payload = {
-          content: "Nguyen van dai 1232000000",
+          content: `${value}`,
           book: {
-            bookID: 1,
+            bookID: idBook,
           },
         };
 
@@ -81,9 +73,8 @@ const AddPostHome = ({ setLoad }) => {
 
     // Call the fetchData function wherever needed
     fetchData();
-    setLoad(true);
+    setLoad(!load);
   };
-  console.log("posts1111", dataPosts);
   // async function getNewPosts() {
   //   const response = await fetch("http://localhost:8080/api/posts/create/2", {
   //     method: "POST",
@@ -356,6 +347,7 @@ const AddPostHome = ({ setLoad }) => {
                           }}
                           src={item.image}
                           alt="imageBook1"
+                          onClick={() => handleClickAddBook(item.bookID)}
                         />
                       </div>
                     ))}
