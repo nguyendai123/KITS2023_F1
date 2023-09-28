@@ -1,8 +1,14 @@
-FROM jelastic/maven:3.8.6-openjdk-20.ea-b6 AS build
-COPY . .
-RUN mvn clean package -DskipTests
+# Fetching latest version of Java
+FROM openjdk:18
 
-FROM openjdk:20-jdk-slim
-COPY --from=build /target/demo-0.0.1-SNAPSHOT.jar demo.jar
+# Setting up work directory
+WORKDIR /app
+
+# Copy the jar file into our app
+COPY ./target/spring-0.0.1-SNAPSHOT.jar /app
+
+# Exposing port 8080
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","demo.jar"]
+
+# Starting the application
+CMD ["java", "-jar", "spring-0.0.1-SNAPSHOT.jar"]
