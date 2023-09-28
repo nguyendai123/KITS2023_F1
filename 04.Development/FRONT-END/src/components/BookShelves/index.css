@@ -1,5 +1,6 @@
 @media screen and (min-width: 787px) {
   .book-shelves-bg-container-lg {
+    min-height: calc(100vh - 12vh - 95px);
     display: flex;
     flex-direction: row;
     background-color: rgb(212, 217, 219);

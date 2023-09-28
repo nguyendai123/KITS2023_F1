@@ -4,6 +4,7 @@
   }
 }
 .home-page-container {
+  min-height: calc(100vh - 12vh - 95px);
   padding: 0 200px;
   display: flex;
   background-color: #f5f7fa;

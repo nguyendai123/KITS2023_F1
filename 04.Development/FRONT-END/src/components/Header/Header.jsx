@@ -1,6 +1,6 @@
 import { Link, redirect } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { RiCloseCircleFill } from "react-icons/ri";
 import { Input, Space, Menu } from "antd";
@@ -14,7 +14,7 @@ const items = [
         Home
       </Link>
     ),
-    key: "home",
+    key: "/",
   },
   {
     label: (
@@ -22,7 +22,7 @@ const items = [
         Ratings
       </Link>
     ),
-    key: "ratings",
+    key: "/ratings",
   },
   {
     label: (
@@ -30,7 +30,7 @@ const items = [
         Bookshelves
       </Link>
     ),
-    key: "shelf",
+    key: "/shelf",
   },
   {
     label: (
@@ -38,7 +38,7 @@ const items = [
         Genres
       </Link>
     ),
-    key: "genres",
+    key: "/genres",
   },
 
   {
@@ -47,7 +47,7 @@ const items = [
         Authors
       </Link>
     ),
-    key: "authors",
+    key: "/authors",
   },
   {
     label: (
@@ -55,17 +55,21 @@ const items = [
         Group
       </Link>
     ),
-    key: "groups",
+    key: "/groups",
   },
 ];
 // eslint-disable-next-line react/prop-types
 const Header = () => {
   const [displayNavbar, setDisplayNavbar] = useState(false);
   const [current, setCurrent] = useState("home");
+  const location = useLocation();
+  const currentKey = location.pathname;
+
   const onClick = (e) => {
-    console.log("click ", e);
+    console.log("click ", e.key);
     setCurrent(e.key);
   };
+  console.log("onClick ", currentKey);
   let navigate = useNavigate();
   const onClickMenu = () => {
     setDisplayNavbar(!displayNavbar);
@@ -119,8 +123,9 @@ const Header = () => {
             justifyContent: "center",
             alignItems: "center",
           }}
-          onClick={onClick}
-          selectedKeys={[current]}
+          onClick={(e) => setCurrent(e.key)}
+          defaultSelectedKeys={["home"]}
+          selectedKeys={[currentKey]}
           mode="horizontal"
           items={items}
         />
@@ -151,10 +156,10 @@ const Header = () => {
           <>
             <div className="header-navbar-tabs-container">
               <Link className="link" to="/">
-                <h1 className={`list-item home-tab`}>Home</h1>
+                <p className={`list-item home-tab`}>Home</p>
               </Link>
               <Link className="link" to="/shelf">
-                <h1 className={`bookshelves-tab`}>BookShelves</h1>
+                <p className={`bookshelves-tab`}>BookShelves</p>
               </Link>
             </div>
             <div className="header-navbar-tabs-container">

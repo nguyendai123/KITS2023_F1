@@ -33,40 +33,37 @@ const GroupPage = () => {
     <>
       <Header />
       <div className="group-container">
-        <Space className="group-header">
-          <button className="group-retry-home">
-            <img
-              style={{ width: "20px", height: "20px" }}
-              src={retryHome}
-              alt="retry"
+        <Space>
+          <Space className="group-header">
+            <button className="group-retry-home">
+              <img
+                style={{ width: "20px", height: "20px" }}
+                src={retryHome}
+                alt="retry"
+              />
+            </button>
+            <div className="group-title">
+              <b>Group</b>
+            </div>
+          </Space>
+          <div className="group-search">
+            <Search
+              style={{
+                marginRight: "20px",
+              }}
+              prefix={<SearchOutlined />}
+              placeholder="input search text"
+              enterButton="Search"
+              size="large"
+              suffix={suffix}
+              onSearch={onSearch}
+              loading={loading}
             />
-          </button>
-          <div className="group-title">
-            <b>Group</b>
+            <Button type="primary" size="large">
+              Create new group
+            </Button>
           </div>
         </Space>
-        <div
-          style={{
-            width: "100%",
-          }}
-          className="group-search"
-        >
-          <Search
-            style={{
-              marginRight: "20px",
-            }}
-            prefix={<SearchOutlined />}
-            placeholder="input search text"
-            enterButton="Search"
-            size="large"
-            suffix={suffix}
-            onSearch={onSearch}
-            loading={loading}
-          />
-          <Button type="primary" size="large">
-            Create new group
-          </Button>
-        </div>
         <div className="group-body">
           <div className="group-body-left">
             <div>
@@ -79,7 +76,7 @@ const GroupPage = () => {
             <GroupItemJoined />
           </div>
           <div className="group-body-right">
-            <div>
+            <div style={{ margin: "0 0 10px  0" }}>
               <b>Group suggestion</b>
             </div>
 
@@ -100,7 +97,6 @@ const GroupPage = () => {
                 showSizeChanger: true,
                 pageSizeOptions: ["16", "24", "32", "64"],
                 defaultPageSize: "16",
-                position: "both",
               }}
               dataSource={todos}
               renderItem={(data) => (
