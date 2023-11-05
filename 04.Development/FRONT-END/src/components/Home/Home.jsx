@@ -105,11 +105,12 @@ const Home = () => {
   const [topRatedApiStatus, setTopRatedApiStatus] = useState(
     topRatedApiStatuses.initial
   );
+
   const [openComment, setOpenComment] = useState(false);
   const [topRatedBooks, setTopRatedBooks] = useState([]);
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(false);
-  // const {
+  // const {\
   //   data: dataPosts,
   //   isLoading,
   //   isError,
@@ -169,7 +170,6 @@ const Home = () => {
     const response = await fetch(topRatedBooksApi, options);
     if (response.ok === true) {
       const fetchedData = await response.json();
-      console.log("ldll", fetchedData);
       const booksList = fetchedData.books;
       // const updatedData = booksList.map((eachBook) => ({
       //   id: eachBook.id,
@@ -278,6 +278,16 @@ const Home = () => {
   const handleClickComment = () => {
     setOpenComment(!openComment);
   };
+  if (
+    document.cookie
+      .split(";")
+      .some((cookie) => cookie.trim().startsWith("jwt_token="))
+  ) {
+    console.log("Tồn tại khóa jwt_token trong cookies.");
+  } else {
+    console.log("k Tồn tại khóa jwt_token trong cookies.");
+    return navigate("/login");
+  }
 
   return (
     <>

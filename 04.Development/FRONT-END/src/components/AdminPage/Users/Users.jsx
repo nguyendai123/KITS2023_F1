@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button, Form, Input, Popconfirm, Select, Table } from "antd";
+import Avatar from "../../Avatar/Avatar";
 
 const { Option } = Select;
 
@@ -90,25 +91,29 @@ const EditableCell = ({
 };
 
 const App = () => {
-  const [dataSource, setDataSource] = useState([
-    {
-      key: "0",
-      name: "Activity 0",
-      Co2_Emission: "10",
-      Category: "Food",
-    },
-    {
-      key: "1",
-      name: "Activity 1",
-      Co2_Emission: "32",
-      Category: "House",
-    },
-  ]);
+  const [dataSource, setDataSource] = useState([]);
   const [count, setCount] = useState(2);
   const [selectedItem, setSelectedItem] = useState("");
+  const [reloadData, setReloadData] = useState(false);
 
+  useEffect(() => {
+    fetch("http://localhost:8080/api/users")
+      .then((response) => response.json())
+      .then((data) => {
+        setDataSource(data);
+        if (reloadData) {
+          setReloadData(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, [reloadData]);
+  console.log("dataSource", dataSource);
   const handleDelete = (key) => {
-    const newData = dataSource.filter((item) => item.key !== key);
+    console.log("delete", key);
+    const newData = dataSource.filter((item) => item.userID !== key);
+    console.log("deletenewdata", newData);
     setDataSource(newData);
   };
 
@@ -146,28 +151,45 @@ const App = () => {
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "Name",
-      width: "30%",
-      editable: true,
-      render: (_, record) => record.name,
+      title: "User name",
+      dataIndex: "username",
+      key: "name",
     },
     {
-      title: "Co2_Emission",
-      dataIndex: "Co2_Emission",
+      title: "Avatar",
+      dataIndex: "avatar",
+      key: "image",
+      render: (image) => (
+        <Avatar srcImage={image} />
+        //<Image  alt={image} src={image} />
+      ),
     },
     {
-      title: "Category",
-      dataIndex: "Category",
+      title: "email",
+      dataIndex: "email",
+      key: "emailAddress",
+    },
+    {
+      title: "Roles",
+      dataIndex: "roles",
+      key: "roles",
+      render: (_, { roles }) => (
+        <>
+          {roles?.map((item, idx) => (
+            <div key={"roles" + idx}>{item.name}</div>
+          ))}
+        </>
+      ),
     },
     {
       title: "Operation",
       dataIndex: "Operation",
+      key: "operation",
       render: (_, record) =>
         dataSource.length >= 1 ? (
           <Popconfirm
             title="Sure to delete?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record.userID)}
           >
             <a>Delete</a>
           </Popconfirm>
@@ -203,7 +225,7 @@ const App = () => {
         components={components}
         rowClassName={() => "editable-row"}
         bordered
-        dataSource={dataSource}
+        dataSource={dataSource.map((item, idx) => ({ ...item, key: idx }))}
         columns={columns}
       />
     </div>

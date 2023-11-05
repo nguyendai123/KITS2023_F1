@@ -6,10 +6,11 @@ import "slick-carousel/slick/slick-theme.css";
 
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import * as Loader from "react-loader-spinner";
+
 import { TailSpin } from "react-loader-spinner";
 import "./BookPage.scss";
 import { useEffect, useState } from "react";
+import { Rate, Space } from "antd";
 
 const topRatedApiStatuses = {
   initial: "INITIAL",
@@ -87,6 +88,7 @@ const BookPage = () => {
         authorName: eachBook.author,
         coverPic: eachBook.image,
         title: eachBook.title,
+        rate: eachBook.rate,
       }));
       setTopRatedApiStatus(topRatedApiStatuses.success);
       setTopRatedBooks(updatedData);
@@ -108,7 +110,7 @@ const BookPage = () => {
     return (
       <Slider Slider {...settings}>
         {topRatedBooks?.map((eachBook) => {
-          const { id, title, coverPic, authorName } = eachBook;
+          const { id, title, coverPic, authorName, rate } = eachBook;
           // const onClickedTopRatedBook = () => {
           //   redirect(`/books/${id}`);
           // };
@@ -129,6 +131,10 @@ const BookPage = () => {
                 </div>
                 <h1 className="top-rated-book-name">{title}</h1>
                 <p className="top-rated-book-author">{authorName}</p>
+                <Space>
+                  <Rate allowHalf defaultValue={rate} disabled />
+                  <span>{10}</span>
+                </Space>
               </button>
             </div>
           );

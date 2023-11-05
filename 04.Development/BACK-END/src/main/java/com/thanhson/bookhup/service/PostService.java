@@ -20,6 +20,7 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
+
     public Post getPostById(Long postID) {
         return postRepository.findByPostID(postID);
     }
@@ -39,4 +40,8 @@ public class PostService {
     public void delete(Post post) {
         postRepository.delete(post);
     }
+
+
+
+
 }

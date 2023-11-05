@@ -18,13 +18,13 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT DISTINCT b.author FROM Book b")
     List<String> findAllAuthors();
 
-    @Query("SELECT DISTINCT b FROM Book b JOIN b.progresses p WHERE p.status = 'Muốn đọc'")
+    @Query("SELECT DISTINCT b FROM Book b JOIN b.progresses p WHERE p.status = 'Want_To_Read'")
     List<Book> findBooksWithDesiredStatus();
 
-    @Query("SELECT DISTINCT b FROM Book b JOIN b.progresses p WHERE p.status = 'Đang đọc'")
+    @Query("SELECT DISTINCT b FROM Book b JOIN b.progresses p WHERE p.status = 'In_Progress'")
     List<Book> findBooksWithReadingStatus();
 
-    @Query("SELECT DISTINCT b FROM Book b JOIN b.progresses p WHERE p.status = 'Đã đọc'")
+    @Query("SELECT DISTINCT b FROM Book b JOIN b.progresses p WHERE p.status = 'Completed'")
     List<Book> findBooksWithReadedStatus();
 
     @Query("SELECT p.status FROM Book b JOIN b.progresses p")

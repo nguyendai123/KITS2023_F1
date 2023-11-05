@@ -16,6 +16,10 @@ const Login = () => {
   };
   const onSubmitSuccuss = (jwtToken) => {
     console.log("xutaa", jwtToken);
+    if (Cookies.get("user_roles") === "ROLE_ADMIN") {
+      console.log("user_roles");
+      return navigate("/admin");
+    }
 
     return navigate("/");
   };
@@ -40,9 +44,12 @@ const Login = () => {
     const response = await fetch(apiUrl, options);
 
     const data = await response.json();
-    console.log(data);
+    console.log("data login", data);
     if (response.ok === true) {
       Cookies.set("jwt_token", data.accessToken, { expires: 30, path: "/" });
+      Cookies.set("user_id", data.id, { expires: 30, path: "/" });
+      Cookies.set("user_roles", data.roles, { expires: 30, path: "/" });
+      localStorage.setItem("data_avatar", data.avatar);
       onSubmitSuccuss(data.accessToken);
     } else {
       onSubmitFailure(data.error_msg);
@@ -58,8 +65,14 @@ const Login = () => {
   };
   const jwtToken = Cookies.get("jwt_token");
   if (jwtToken !== undefined) {
+    if (Cookies.get("user_roles") === "ROLE_ADMIN") {
+      console.log("user_roles");
+      return navigate("/");
+    }
+
     return navigate("/");
   }
+
   return (
     <div className="login-page">
       <div
@@ -83,7 +96,10 @@ const Login = () => {
         </div>
 
         <div className="form-main-container">
-          <form className="form-container" onSubmit={onSubmitForm}>
+          <form
+            className="form-container"
+            onSubmit={(event) => onSubmitForm(event)}
+          >
             <div className="input-container">
               <>
                 <label className="input-label" htmlFor="username">

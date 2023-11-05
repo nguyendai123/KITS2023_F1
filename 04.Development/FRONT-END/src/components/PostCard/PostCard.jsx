@@ -47,7 +47,7 @@ function PostCard({ data, load, setLoad, isError, isLoading }) {
   const handleClickComment = () => {
     setOpenComment(!openComment);
   };
-  console.log("dât", data);
+  console.log("data postcard123", data);
 
   const handleClickEditSave = (postID) => {
     // Assuming the postID, updatedPost, and result are defined and available

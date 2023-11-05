@@ -16,6 +16,9 @@ const { TextArea } = Input;
 import { useState, useMemo } from "react";
 import AccountHeader from "../../AccountHeader/AccountHeader";
 import { useEffect } from "react";
+import PostCardItemBookProgress from "../../PostCard/PostCardItemBookProgress/PostCardItemBookProgress";
+import Avatar from "../../Avatar/Avatar";
+import Cookies from "js-cookie";
 const items = [
   {
     label: <a href="#">Private</a>,
@@ -33,16 +36,21 @@ const breakPoints = [
 const AddPostHome = ({ load, setLoad }) => {
   const [open, setOpen] = useState(false);
   const [openAddBook, setOpenAddBook] = useState(false);
-  const [add, setAdd] = useState(false);
+  const [dataBookAdd, setDataBookAdd] = useState();
   const [value, setValue] = useState("");
-  const [titleModel, setTitleModel] = useState("Create Post");
   const [idBook, setIdBook] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
+  const [isBookAddPost, setIsBookAddPost] = useState(false);
+  const [baseImage, setBaseImage] = useState("");
+  const [pageProgressStatus, setPageProgressStatus] = useState(0);
+  const user_Id = Cookies.get("user_id");
   const {
     data: dataBooks,
     isLoadingBooks,
     isErrorBooks,
   } = useFetch("http://localhost:8080/api/books", false);
   console.log("dataBooks", dataBooks, isLoadingBooks, isErrorBooks);
+
   const onClickAddBookPost = () => {
     setOpen(false);
     setOpenAddBook(true);
@@ -51,61 +59,96 @@ const AddPostHome = ({ load, setLoad }) => {
 
   const handleClickAddBook = (id) => {
     setIdBook(id);
+    const {
+      data: dataBooksAdd,
+      isLoadingBooksAdd,
+      isErrorBooksAdd,
+    } = useFetch(`http://localhost:8080/api/books/${id}`, false);
+    console.log(
+      "dataBooksAdd",
+      dataBooksAdd,
+      isLoadingBooksAdd,
+      isErrorBooksAdd
+    );
+    setDataBookAdd(dataBooksAdd);
   };
   const handleDone = () => {
+    setIsBookAddPost(true);
+    setOpenAddBook(false);
+    setOpen(true);
+  };
+  async function getNewPosts() {
     const fetchData = async () => {
       try {
-        const url = "http://localhost:8080/api/posts/create/2"; // Replace with your API endpoint
+        const url = `http://localhost:8080/api/posts/create/${user_Id}`; // Replace with your API endpoint
         const payload = {
           content: `${value}`,
           book: {
             bookID: idBook,
           },
+          imageData: baseImage,
         };
 
         const response = await axios.post(url, payload);
         const data = response.data;
-        console.log("posts dai api", data);
+        console.log("posts dai api add post", data);
+        const pageBook = dataBookAdd.page;
+        const status =
+          pageProgressStatus < pageBook
+            ? "In_Progress"
+            : pageProgressStatus == pageBook
+            ? "Completed"
+            : "Want_To_Read";
+        const urlProgress = "http://localhost:8080/api/progresses/create";
+
+        const response1 = await axios.post(urlProgress, {
+          book: {
+            bookID: idBook,
+          },
+          userProgress: {
+            userID: Cookies.get("user_id"),
+          },
+          readPage: pageProgressStatus,
+          status: status,
+        });
+        const data1 = response1.data;
+        console.log("posts dai api progress", data1);
       } catch (error) {
         console.error("Error:", error);
       }
+      setLoad(!load);
     };
-
+    setOpen(false);
     // Call the fetchData function wherever needed
     fetchData();
-    setLoad(!load);
+  }
+
+  const changeHandler = async (event) => {
+    setIsFilePicked(true);
+    const base64 = await convertBase64(event.target.files[0]);
+    setBaseImage(base64);
   };
-  // async function getNewPosts() {
-  //   const response = await fetch("http://localhost:8080/api/posts/create/2", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       content: "Nguyen van dai 123456",
-  //       book: {
-  //         bookID: 2,
-  //       },
-  //     }),
-  //   });
-  //   const data = await response.json();
-  //   console.log(data);
-  // }
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
   return (
     <div className="home-add-newpost bg-white p-3 mt-3 rounded border shadow mb-3">
       {/* avatar */}
       <div className="d-flex" type="button">
         <div className="p-1">
-          <img
-            src="https://source.unsplash.com/collection/happy-people"
-            alt="avatar"
-            className="rounded-circle me-2"
-            style={{
-              width: "38px",
-              height: "38px",
-              objectFit: "cover",
-            }}
-          />
+          <Avatar srcImage={localStorage.getItem("data_avatar")} />
         </div>
         <button
           className="form-control rounded-pill border-0 pointer pe-auto"
@@ -173,6 +216,26 @@ const AddPostHome = ({ load, setLoad }) => {
                 }}
               />
             </div>
+          </div>
+          <div className="model-content-add-image">
+            <input type="file" name="file" onChange={changeHandler} />
+            {isFilePicked ? (
+              <div>
+                <img src={baseImage} height="200px" />
+              </div>
+            ) : (
+              <p>Select a file to show details</p>
+            )}
+          </div>
+          <div className="book-post-create">
+            {isBookAddPost && (
+              <div>
+                <PostCardItemBookProgress
+                  item={dataBooksAdd}
+                  setPageProgressStatus={setPageProgressStatus}
+                />
+              </div>
+            )}
           </div>
           <hr style={{ color: "#9197a3" }} />
           <div className="model-content-active">
@@ -284,7 +347,7 @@ const AddPostHome = ({ load, setLoad }) => {
             <div className="model-content-submit">
               <Button
                 className="model-content-btn-submit"
-                // onClick={getNewPosts}
+                onClick={getNewPosts}
                 block
               >
                 Post
@@ -352,22 +415,6 @@ const AddPostHome = ({ load, setLoad }) => {
                       </div>
                     ))}
                   </Carousel>
-                  /* <img
-                      style={{ width: "150px", height: "250px" }}
-                      src={dataBooks[0].image}
-                      alt="imageBook1"
-                    />
-                    <img
-                      style={{ width: "150px", height: "250px" }}
-                      src={dataBooks[1].image}
-                      alt="imageBook1"
-                    />
-                    <img
-                      style={{ width: "150px", height: "250px" }}
-                      src={dataBooks[0].image}
-                      alt="imageBook2"
-                    /> */
-                  // </Space>
                 )}
             </div>
             <div className="model-content-submit">

@@ -32,7 +32,7 @@ function RatingBookItem() {
                   <div className="home-book-rating-name">{item.title}</div>
                   <div className="home-book-rating-author">{item.author}</div>
                 </div>
-                <Rate allowHalf defaultValue={4.5} disabled />
+                <Rate allowHalf defaultValue={item.rate} disabled />
               </div>
             </div>
           )}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input } from "antd";
+import { Table, Button, Modal, Form, Input, Image } from "antd";
+import axios from "axios";
 
 const Books = () => {
   const [books, setbooks] = useState([]);
@@ -17,7 +18,7 @@ const Books = () => {
         console.error("Error:", error);
       });
   }, [reloadData]);
-
+  console.log("books", books);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newbook, setNewbook] = useState({
     id: "",
@@ -35,101 +36,123 @@ const Books = () => {
     {
       title: "Tên sách",
       dataIndex: "title",
+      key: "title",
     },
     {
       title: "Ảnh",
       dataIndex: "image",
+      key: "image",
+      render: (image) => (
+        <Image width={180} height={270} alt={image} src={image} />
+      ),
     },
     {
       title: "Tác giả",
       dataIndex: "author",
+      key: "author",
     },
     {
       title: "ISBN",
       dataIndex: "isbn",
+      key: "isbn",
     },
     {
       title: "Tóm tắt",
       dataIndex: "summary",
+      key: "summary",
     },
     {
       title: "Trang",
       dataIndex: "page",
+      key: "page",
     },
-    {
-      title: "Hành động",
-      dataIndex: "action",
-      render: (_, record) => (
-        <div>
-          <Button type="primary" onClick={() => editbook(record)}>
-            Sửa đổi
-          </Button>
-          <Button type="danger" onClick={() => cancelbook(record)}>
-            Hủy bỏ
-          </Button>
-        </div>
-      ),
-    },
+    // {
+    //   title: "Hành động",
+    //   dataIndex: "action",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <div>
+    //       <Button type="primary" onClick={() => editbook(record)}>
+    //         Sửa đổi
+    //       </Button>
+    //       <Button type="danger" onClick={() => cancelbook(record)}>
+    //         Hủy bỏ
+    //       </Button>
+    //     </div>
+    //   ),
+    // },
   ];
 
   const showModal = () => {
     setIsModalVisible(true);
   };
-  const handleOk = () => {
-    if (newbook.name) {
-      const formData = new FormData();
-      formData.append("title", newbook.name);
-      formData.append("imageFile", imageFile);
-      formData.append("author", newbook.author);
-      formData.append("isbn", newbook.isbn);
-      formData.append("summary", newbook.summary);
-      formData.append("page", newbook.page);
-
+  const handleOk = async () => {
+    console.log("new book", newbook.name);
+    if (1) {
+      const formData = {
+        title: newbook.name,
+        image: imageFile,
+        author: newbook.author,
+        isbn: newbook.isbn,
+        summary: newbook.summary,
+        page: newbook.page,
+      };
+      console.log("formData", formData);
       if (editingbook) {
+        // const bookId = editingbook.bookID;
+
+        // // Assume the book has an "id" property
+        // fetch(`http://localhost:8080/api/books/${bookId}`, {
+        //   method: "PUT",
+        //   formData,
+        // })
+        //   .then((response) => response.json())
+        //   .then((data) => {
+        //     const updatedbooks = books.map((item) => {
+        //       if (item.id === bookId) {
+        //         return data;
+        //       }
+        //       return item;
+        //     });
+
+        //     setbooks(updatedbooks);
+        //     setEditingbook(null);
+
+        //     setReloadData(true);
+        //   })
+        //   .catch((error) => {
+        //     console.error("Error:", error);
+        //   });
         // Edit existing book
 
         const bookId = editingbook.bookID;
+        const urlBook = `http://localhost:8080/api/books/${bookId}`;
 
-        // Assume the book has an "id" property
-        fetch(`http://localhost:8080/api/books/${bookId}`, {
-          method: "PUT",
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const updatedbooks = books.map((item) => {
-              if (item.id === bookId) {
-                return data;
-              }
-              return item;
-            });
-            setbooks(updatedbooks);
-            setEditingbook(null);
+        const response = await axios.put(urlBook, formData);
+        const data = response.data;
+        const updatedbooks = books.map((item) => {
+          if (item.id === bookId) {
+            return data;
+          }
+          return item;
+        });
+        console.log("books dai api progress", data);
+        setbooks(updatedbooks);
+        setEditingbook(null);
 
-            setReloadData(true);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+        setReloadData(true);
       } else {
-        // Add new book
-        fetch("http://localhost:8080/api/books/add", {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            setbooks((prevbooks) => [...prevbooks, data]);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+        const url = "http://localhost:8080/api/books/add";
+        const response1 = await axios.post(url, formData);
+        const data1 = response1.data;
+        console.log("books dai api progress", data1);
+        setbooks((prevbooks) => [...prevbooks, data1]);
       }
 
       setIsModalVisible(false);
       setNewbook({
         name: "",
-        image: null,
+        image: "",
         author: "",
         isbn: "",
         summary: "",
@@ -158,14 +181,30 @@ const Books = () => {
       [name]: value,
     }));
   };
-  const [imageFile, setImageFile] = useState(null);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  const [imageFile, setImageFile] = useState();
+
+  const handleFileChange = async (e) => {
+    const file = await convertBase64(e.target.files[0]);
+
     console.log(file, "File ở đây???");
     setImageFile(file);
   };
 
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
   const editbook = (book) => {
     // console.log(book,"Có gì ở đây ?")
     // console.log(book.image,"Có image ở đây không?")
@@ -205,7 +244,10 @@ const Books = () => {
       <Button type="primary" onClick={showModal}>
         Thêm sách
       </Button>
-      <Table dataSource={books} columns={columns} />
+      <Table
+        dataSource={books.map((item, idx) => ({ ...item, key: idx }))}
+        columns={columns}
+      />
 
       <Modal
         title="Thêm sách"
@@ -223,7 +265,8 @@ const Books = () => {
           </Form.Item>
           <Form.Item label="Ảnh">
             <Input name="imageFile" type="file" onChange={handleFileChange} />
-            <Input value={newbook.imageFile} readOnly />
+            <br />
+            <Image width={180} height={270} src={imageFile} />
           </Form.Item>
           <Form.Item label="Tác giả">
             <Input

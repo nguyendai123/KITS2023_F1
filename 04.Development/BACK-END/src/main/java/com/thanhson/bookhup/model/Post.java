@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +31,8 @@ public class Post {
     private int likeCount;
     @Column(name = "Rating")
     private double rating;
+    @Column(name = "ImageData",columnDefinition = "LONGTEXT")
+    private String imageData;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userID")
     private User user;

@@ -7,7 +7,7 @@ import iconlike1 from "../../../assets/iconlike.svg";
 import loveicon from "../../../assets/love.svg";
 import commenticon from "../../../assets/iconcomment.svg";
 import iconshare from "../../../assets/iconshare.svg";
-import Destination from "../../../assets/Destination";
+
 import moment from "moment";
 import { Rate, Menu } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,6 +22,10 @@ import AccountHeader from "../../AccountHeader/AccountHeader";
 import { Button, Dropdown, Modal, Space, Popover, ConfigProvider } from "antd";
 import { Input } from "antd";
 import LikeCount from "../LikeCount/LikeCount";
+import PostCardItemBookProgress from "../PostCardItemBookProgress/PostCardItemBookProgress";
+import CommentPostItem from "./CommentPostItem/CommentPostItem";
+import Avatar from "../../Avatar/Avatar";
+import Cookies from "js-cookie";
 
 const { TextArea } = Input;
 
@@ -31,10 +35,12 @@ const breakPoints = [
   { width: 768, itemsToShow: 3 },
   { width: 1200, itemsToShow: 3 },
 ];
+let renderCount = 0;
+
 const PostCardItem = ({
   isError,
   isLoading,
-  data,
+
   item,
   load,
   setLoad,
@@ -46,11 +52,45 @@ const PostCardItem = ({
   const [currentValue] = useState(2);
   const [openComment, setOpenComment] = useState(false);
   const [userLike, setUserLike] = useState(false);
-  const handleClickComment = () => {
-    setOpenComment(!openComment);
+  const [progress, setProgress] = useState({});
+  const [dataCommentPost, setDataCommentPost] = useState();
+  const handleClickComment = async (postID) => {
+    const _opencomment = !openComment;
+    if (_opencomment) {
+      const urlComment = `http://localhost:8080/api/comment/post/${postID}`;
+      // Get request using axios with error handling
+      await axios
+        .get(urlComment)
+        .then((response) => {
+          console.log("comment jjj", response.data);
+          setDataCommentPost(response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    }
+    setOpenComment(_opencomment);
   };
-  console.log("dât", data);
+  renderCount++;
 
+  console.log("data postcarditem", renderCount);
+  const menu = (
+    <Menu>
+      <Menu.Item
+        key="0"
+        onClick={() => {
+          setOpen(true);
+          setPost(item);
+          setValue(item.content);
+        }}
+      >
+        Edit Post
+      </Menu.Item>
+      <Menu.Item key="1" onClick={() => handleDeletePost(item.postID)}>
+        Delete Post
+      </Menu.Item>
+    </Menu>
+  );
   const handleClickEditSave = (postID) => {
     // Assuming the postID, updatedPost, and result are defined and available
 
@@ -86,71 +126,79 @@ const PostCardItem = ({
       });
     setLoad(!load);
   };
-  const handleClickLikePost = (postID) => {
-    setUserLike(!userLike);
-    const url = `http://localhost:8080/api/posts/post/${postID}`;
+
+  useEffect(() => {
+    async function fetchData() {
+      const url = `http://localhost:8080/api/progresses/${item.user.userID}/${item.book.bookID}`;
+
+      await axios
+        .get(url)
+        .then((response) => {
+          console.log("trang sach", response.data);
+          setProgress(response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+
+      setLoad(!load);
+    }
+    fetchData();
+  }, []);
+  const handleClickLikePost = async (postID) => {
+    const url = `http://localhost:8080/api/posts/${postID}/like`;
+    const urlDislike = `http://localhost:8080/api/posts/${postID}/${Cookies.get(
+      "user_id"
+    )}/dislike`;
+
+    try {
+      const updatedUserLike = !userLike;
+
+      if (updatedUserLike) {
+        const response = await axios.post(url, {
+          user: { userID: Cookies.get("user_id") },
+          post: { postID: postID },
+        });
+        console.log("Liked post:", response.data);
+      } else {
+        const response = await axios.post(urlDislike, {
+          user: { userID: Cookies.get("user_id") },
+          post: { postID: postID },
+        });
+        console.log("Disliked post:", response.data);
+      }
+
+      // Update the userLike state variable with the new value
+      setUserLike(updatedUserLike);
+    } catch (error) {
+      console.error("There was an error!", error);
+    }
   };
   return (
     <div>
-      {!isError && !isLoading && data && data.length > 0 && (
+      {!isError && !isLoading && item && (
         <div className="post-card">
           {/* author */}
           <div className="author-des">
             {/* avatar */}
-            <div className="avatar">
-              <img
-                src="https://source.unsplash.com/collection/happy-people"
-                alt="avatar"
-                className="avatar-images"
-                style={{ width: 38, height: 38, objectFit: "cover" }}
-              />
+            <Avatar item={item} srcImage={item.user.avatar} />
 
-              <div className="author-des-post">
-                <p className="author-name">{item.user.username}</p>
-                <span className="post-createat">
-                  {moment(item.createDate).format(
-                    "dddd, MMMM Do YYYY, h:mm:ss a"
-                  )}
-                </span>
-              </div>
-            </div>
             {/* edit */}
 
             {/* edit menu */}
 
             <Dropdown
-              overlay={
-                <Menu>
-                  <Menu.Item
-                    key="0"
-                    onClick={() => {
-                      setOpen(true);
-                      setPost(item);
-                      setValue(item.content);
-                    }}
-                  >
-                    Edit Post
-                  </Menu.Item>
-                  <Menu.Item
-                    key="1"
-                    onClick={() => handleDeletePost(item.postID)}
-                  >
-                    Delete Post
-                  </Menu.Item>
-                </Menu>
-              }
+              overlay={menu}
               trigger={["click"]}
               placement="bottomRight"
             >
-              <Space>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 512 512"
-                >
-                  <path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z" />
-                </svg>
-              </Space>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="1em"
+                viewBox="0 0 512 512"
+              >
+                <path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z" />
+              </svg>
             </Dropdown>
           </div>
           {/* post content */}
@@ -161,83 +209,16 @@ const PostCardItem = ({
               <p>{item.content}</p>
               <div className="post-content-image-user-add">
                 <img
-                  src="https://source.unsplash.com/random/120"
+                  src={item.imageData}
                   alt="post image"
                   className="post-content-image-user-add-1"
                 />
               </div>
               <div className="post-content-body">
-                <img
-                  src="https://source.unsplash.com/random/12"
-                  alt="post image"
-                  className="post-content-image"
+                <PostCardItemBookProgress
+                  item={item.book}
+                  progress={progress}
                 />
-                <div>
-                  <p>{item.book.title}</p>
-                  <p>{item.book.author}</p>
-                  <Progress
-                    style={{ width: "280px" }}
-                    percent={100}
-                    strokeColor={{
-                      "0%": "#87d068",
-                      "100%": "#108ee9",
-                    }}
-                  />
-                  <div style={{ marginBottom: "30px" }}>
-                    <Space>
-                      <span>
-                        {item.book.page}/{item.book.page}
-                      </span>
-                      <span>Trang sách đã đọc</span>
-                    </Space>
-                  </div>
-                  <Space>
-                    <Button className="btn-post-content-body">
-                      <div className="btn-post-content-body-des">
-                        <Destination />
-                      </div>
-                      <div style={{ margin: "0px 10px 0 0" }}>Muốn đọc</div>
-                      <div style={{ margin: "0px 10px 0 0" }}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="15"
-                          height="12"
-                          viewBox="0 0 15 12"
-                          fill="none"
-                        >
-                          <path
-                            d="M7.5 12L0.571797 -1.30507e-06L14.4282 -9.36995e-08L7.5 12Z"
-                            fill="#6D6D6D"
-                          />
-                        </svg>
-                      </div>
-                    </Button>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Rate
-                        allowHalf
-                        // defaultValue={item.book.averageRating}
-                        defaultValue={4}
-                        disabled
-                      />
-                      <div
-                        style={{
-                          width: "120px",
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        (10 đánh giá)
-                      </div>
-                    </div>
-                  </Space>
-                </div>
               </div>
             </div>
 
@@ -272,8 +253,11 @@ const PostCardItem = ({
 
                   <LikeCount item={item} userLike={userLike} />
                 </div>
-                <div className="comment-number" onClick={handleClickComment}>
-                  2 Comment
+                <div
+                  className="comment-number"
+                  onClick={() => handleClickComment(item.postID)}
+                >
+                  {dataCommentPost?.length} Comment
                 </div>
               </div>
               {/* comments start*/}
@@ -292,7 +276,7 @@ const PostCardItem = ({
                   {/* comment & like bar */}
                   <div className="comment-bar d-flex justify-content-around">
                     <div
-                      onClick={() => handleClickLikePost()}
+                      onClick={() => handleClickLikePost(item.postID)}
                       className="dropdown-item "
                     >
                       {userLike ? (
@@ -314,11 +298,12 @@ const PostCardItem = ({
                         </>
                       )}
                     </div>
-                    <div className="dropdown-item">
+                    <div
+                      className="dropdown-item"
+                      onClick={() => handleClickComment(item.postID)}
+                    >
                       <img src={commenticon} alt="commenticon" />
-                      <span onClick={handleClickComment}>
-                        &nbsp; &nbsp;Comment
-                      </span>
+                      <span>&nbsp; &nbsp;Comment</span>
                     </div>
                     <div className="dropdown-item">
                       <img src={iconshare} alt="commenticon" />
@@ -330,56 +315,11 @@ const PostCardItem = ({
                     <div className="comment-container">
                       <hr style={{ marginBottom: "15px" }} />
                       <div className="comment-body">
-                        {/* comment 1 */}
-                        <div className="commentitem my-1">
-                          {/* avatar */}
-                          <img
-                            src="https://source.unsplash.com/collection/happy-people"
-                            alt="avatar"
-                            className="comment-image"
-                            style={{
-                              width: 38,
-                              height: 38,
-                              objectFit: "cover",
-                            }}
-                          />
-                          {/* comment text */}
-                          <div className="comment-text comment__input">
-                            {/* comment menu of author */}
-                            <div className="comment-author">
-                              {/* icon */}
-                              {/* <Dropdown
-                                menu={{
-                                  items,
-                                }}
-                                trigger={["click"]}
-                                placement="bottomRight"
-                              >
-                                <Space>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    height="1em"
-                                    viewBox="0 0 512 512"
-                                  >
-                                    <path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z" />
-                                  </svg>
-                                </Space>
-                              </Dropdown> */}
-                            </div>
-                            <p className="comment-author-name">John</p>
-                            <p>
-                              <div className="comment-des-body">
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit.Lorem ipsum dolor sit amet,
-                                consectetur adipiscing elit.Lorem ipsum dolor
-                                sit amet, consectetur adipiscing elit.Lorem
-                                ipsum dolor sit amet, consectetur adipiscing
-                                elit.Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit.
-                              </div>
-                            </p>
+                        {dataCommentPost.map((comment, idx) => (
+                          <div key={`comment ${idx}`}>
+                            <CommentPostItem comment={comment} />
                           </div>
-                        </div>
+                        ))}
                         {/* comment 2 */}
                         <div className="commentitem">
                           {/* avatar */}
@@ -404,18 +344,9 @@ const PostCardItem = ({
                         {/* create comment */}
                         <form className="comment-author-add">
                           {/* avatar */}
-                          <div>
-                            <img
-                              src="https://source.unsplash.com/collection/happy-people"
-                              alt="avatar"
-                              className="comment-image"
-                              style={{
-                                width: 38,
-                                height: 38,
-                                objectFit: "cover",
-                              }}
-                            />
-                          </div>
+                          <Avatar
+                            srcImage={localStorage.getItem("data_avatar")}
+                          />
                           {/* input */}
                           <input
                             type="text"

@@ -129,6 +129,7 @@
 }
 .comment-number {
   margin-top: 0.75rem;
+  cursor: pointer;
 }
 .post-content-body {
   display: flex;

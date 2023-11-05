@@ -24,7 +24,7 @@ public class Book {
     @Column(name = "Title", length = 255, nullable = false)
     private String title;
 
-    @Column(name = "Image")
+    @Column(name = "Image",columnDefinition = "LONGTEXT")
     private String image;
 
     @Column(name = "Author", length = 50, nullable = false)
@@ -38,6 +38,8 @@ public class Book {
 
     @Column(name = "Page")
     private int page;
+    @Column(name = "Rate")
+    private double rate;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST,

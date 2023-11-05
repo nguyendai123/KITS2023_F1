@@ -38,6 +38,8 @@ public class PostController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ProgressService progressService;
 
     @GetMapping("/posts")
     public ResponseEntity<List<Post>> getAllPosts() {
@@ -130,14 +132,19 @@ public class PostController {
         }
 
         // You can add additional checks here if needed, such as checking user
-        // authorization
+        // Delete likes associated with the post
+        likeService.deleteLikesByPostId(postID);
 
+        // Delete comments associated with the post
+        //commentService.deleteCommentsByPostId(postID);
+        // authorization
+        //progressService.delete();
         postService.delete(post);
 
         return ResponseEntity.ok("Post deleted successfully.");
     }
 
-    @GetMapping("/{postId}/liked-users")
+    @GetMapping("/posts/{postId}/liked-users")
     public ResponseEntity<List<String>> getLikedUserNames(@PathVariable Long postID) {
         Optional<Post> optionalPost = postRepository.findById(postID);
 
@@ -154,8 +161,11 @@ public class PostController {
         }
     }
 
-    @PostMapping("/{postId}/like")
-    public ResponseEntity<String> likePost(@PathVariable Long postId) {
+    @PostMapping("/posts/{postId}/like")
+    public ResponseEntity<String> likePost(@PathVariable Long postId, @RequestBody @Valid Like like) {
+        Like createdLike = likeService.save(like);
+
+
         // Tìm bài viết
         Optional<Post> optionalPost = postRepository.findById(postId);
 
@@ -166,9 +176,39 @@ public class PostController {
             int currentLikeCount = post.getLikeCount();
             post.setLikeCount(currentLikeCount + 1);
             postRepository.save(post);
-
-            return ResponseEntity.ok("Post liked successfully.");
+            return ResponseEntity.status(HttpStatus.CREATED).body(String.valueOf(createdLike));
+            //return ResponseEntity.ok("Post liked successfully.");
         } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PostMapping("/posts/{postId}/{userId}/dislike")
+    public ResponseEntity<String> disLikePost(@PathVariable Long postId,@PathVariable Long userId ) {
+    Post post1 = postService.getPostById(postId);
+    User user = userService.getUserById(userId);
+
+        Like like = likeService.getLikeByUserIdAndPostId( post1,  user);
+        if (like != null) {
+            likeService.deleteLike(like.getLikeID());
+
+            // Tìm bài viết
+            Optional<Post> optionalPostDisLike = postRepository.findById(postId);
+
+            if (optionalPostDisLike.isPresent()) {
+                Post post = optionalPostDisLike.get();
+
+                // Tăng giá trị likeCount
+                int currentLikeCount = post.getLikeCount();
+                post.setLikeCount(currentLikeCount - 1);
+                postRepository.save(post);
+
+                return ResponseEntity.ok("Post disliked successfully.");
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+        else {
+            // Handle like not found
             return ResponseEntity.notFound().build();
         }
     }

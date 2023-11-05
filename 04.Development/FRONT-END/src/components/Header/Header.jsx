@@ -7,6 +7,7 @@ import { Input, Space, Menu } from "antd";
 const { Search } = Input;
 import "./Header.css";
 import { useState } from "react";
+import Profile from "../Profile/Profile";
 const items = [
   {
     label: (
@@ -62,6 +63,7 @@ const items = [
 const Header = () => {
   const [displayNavbar, setDisplayNavbar] = useState(false);
   const [current, setCurrent] = useState("home");
+  const [User, setUser] = useState("");
   const location = useLocation();
   const currentKey = location.pathname;
 
@@ -104,7 +106,7 @@ const Header = () => {
                 className="header-website-logo"
                 src="https://res.cloudinary.com/dkxxgpzd8/image/upload/v1647190320/Group_7731_v0p1nt_gjeokw.png"
                 alt="website logo"
-                onClick={onClickWebSiteLogo}
+                onClick={() => onClickWebSiteLogo()}
               />
             </>
           </Link>
@@ -128,6 +130,11 @@ const Header = () => {
           selectedKeys={[currentKey]}
           mode="horizontal"
           items={items}
+        />
+        <Profile
+          token={Cookies.get("jwt_token")}
+          setUser={setUser}
+          userImage={localStorage.getItem("data_avatar")}
         />
 
         <button onClick={onClickLogout} className="logout-btn" type="button">

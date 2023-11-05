@@ -48,10 +48,12 @@ public class SpringSecurityConfig {
         http.cors().and().csrf().disable()
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/auth/**").permitAll();
-                    authorize.requestMatchers("/api/books/**").permitAll();
+//                    authorize.requestMatchers("/api/books/**").permitAll();
                     authorize.requestMatchers("/api/genres/**").permitAll();
                     authorize.requestMatchers("/api/posts/**").permitAll();
                     authorize.requestMatchers("/api/comment/**").permitAll();
+                    authorize.requestMatchers("/api/**").permitAll();
+
                     authorize.anyRequest().authenticated();
                 });
 

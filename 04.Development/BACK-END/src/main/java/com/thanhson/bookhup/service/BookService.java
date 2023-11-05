@@ -2,13 +2,17 @@ package com.thanhson.bookhup.service;
 
 import com.thanhson.bookhup.Upload.FileUploadUtil;
 import com.thanhson.bookhup.model.Book;
+import com.thanhson.bookhup.model.Progress;
+import com.thanhson.bookhup.model.User;
 import com.thanhson.bookhup.repository.BookRepository;
+import com.thanhson.bookhup.repository.ProgressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +20,8 @@ import java.util.Optional;
 public class BookService {
     @Autowired
     private BookRepository bookRepository;
-
+    @Autowired
+    private ProgressRepository progressRepository;
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
@@ -80,4 +85,19 @@ public class BookService {
         return bookRepository.findBooksWithStatus();
     }
 
+    public Book findById(Long bookId) {
+        return bookRepository.findById(bookId).orElse(null);
+    }
+
+    public List<Book> findBooksWithUserIdStatus(User userProgress) {
+        List<Progress> progressList = progressRepository.findByUserProgress(userProgress);
+        List<Book> books = new ArrayList<>();
+
+        for (Progress progress : progressList) {
+            books.add(progress.getBook());
+        }
+
+        return books;
+
+    }
 }

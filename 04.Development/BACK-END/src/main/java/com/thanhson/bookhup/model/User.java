@@ -28,13 +28,13 @@ public class User {
     @Column(name = "Password", length = 100, nullable = false)
     private String password;
 
-    @Column(name = "Avatar", length = 255)
+    @Column(name = "Avatar", columnDefinition = "LONGTEXT")
     private String avatar;
 
     @Column(name = "Biography")
     private String biography;
 
-    @Column(name = "FavoritteGenres", length = 255)
+    @Column(name = "FavoriteGenres", length = 255)
     private String favoriteGenres;
 
     @OneToMany(mappedBy = "userProgress")
